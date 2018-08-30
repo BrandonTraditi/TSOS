@@ -22,8 +22,8 @@ If your development environment does not then you'll need to automate the proces
 Setup Gulp
 ==========
 
-1. `npm install gulp` to get the Gulp Task Runner.
-1. `npm install gulp-tsc` to get the Gulp TypeScript plugin.
+1. `npm install -g gulp` to get the Gulp Task Runner.
+1. `npm install -g gulp-tsc` to get the Gulp TypeScript plugin.
 
 
 Run `gulp` at the command line in the root directory of this project.
