@@ -58,7 +58,7 @@ function Glados() {
 
 
       // Use the 'status' command to give the expected output of the program below.
-		var str = "status output should be similar to 'counting0counting1hello worldcounting 2'.";
+		var str = "status output should be similar to 'counting0counting1counting 2'.";
 		for (var i = 0; i < str.length; i++) {
 			_KernelInputQueue.enqueue(str[i]);
 		}
