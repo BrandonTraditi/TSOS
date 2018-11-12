@@ -114,6 +114,17 @@ function Glados() {
 								     _KernelInputQueue.enqueue('l');            
 								     TSOS.Kernel.prototype.krnInterruptHandler(KEYBOARD_IRQ, [13, false]);		
 									}, 4000);
+   /*
+   Manual tests:
+   
+   Memory access bounds/limit checking:
+   A9 A9 A2 01 EC 13 00 AC 0B 00 8D F0 00 EE 0B 00 D0 F5 00 00
+   
+   Invalid op code:
+   A9 A9 DD 01 00
+   
+   */
+	   
    };
 		
 }
