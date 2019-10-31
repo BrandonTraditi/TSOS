@@ -255,6 +255,36 @@ module TSOS {
                     case "help":
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
+                    case "ver":
+                        _StdOut.putText("Displays the current version Data.");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("Shut down the virtual OS but leaves the underlying host/hardware simulation running.");
+                        break;
+                    case "cls":
+                        _StdOut.putText("Clears the screen and resets the cursor position.");
+                        break;
+                    case "man":
+                        _StdOut.putText("Displays the Manual page for <topic>.");
+                        break;
+                    case "trace":
+                        _StdOut.putText("<on | off> - Turns the OS trace on or off.");
+                        break;
+                    case "mrot13":
+                        _StdOut.putText("Does rot13 obfuscation on <string>.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Sets the prompt.");
+                        break;
+                    case "date":
+                        _StdOut.putText("Displays the date and time.");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Finds where your soul is.");
+                        break;
+                    case "prediction":
+                        _StdOut.putText("Super Bowl LIV prediction");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -303,6 +333,19 @@ module TSOS {
             } else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        }
+
+        public shellDate(args: string[]) {
+            var d = new Date().toLocaleDateString;
+            _StdOut.putText(d);
+        }
+
+        public shellWhereAmI(args: string[]) {
+            _StdOut.putText("Follow your soul, it knows the way");
+        }
+
+        public shellPrediction(args: string[]) {
+            _StdOut.putText("Superbowl LIV predictions:Patriots 24 - Packers 10");
         }
 
     }
