@@ -79,6 +79,24 @@ module TSOS {
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
+            //date
+            sc = new ShellCommand(this.shellDate,
+                                  "date",
+                                  "Displays the Date.");
+            this.commandList[this.commandList.length] = sc;
+
+            //whereami
+            sc = new ShellCommand(this.shellWhereAmI,
+                                  "whereami",
+                                  "Finds your soul");   
+            this.commandList[this.commandList.length] = sc;
+
+            //SuperBowl Prediction
+            sc = new ShellCommand(this.shellPrediction,
+                                 "prediction",
+                                 "Prediction for SuperBowl LIV");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
