@@ -10,16 +10,22 @@
 var TSOS;
 (function (TSOS) {
     var Console = /** @class */ (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
+        function Console(currentFont, currentFontSize, currentXPosition, lastXPosition, currentYPosition, backspaceCount, backspaceCanvasData, buffer) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
+            if (lastXPosition === void 0) { lastXPosition = [0]; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
+            if (backspaceCount === void 0) { backspaceCount = 0; }
+            if (backspaceCanvasData === void 0) { backspaceCanvasData = []; }
             if (buffer === void 0) { buffer = ""; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
+            this.lastXPosition = lastXPosition;
             this.currentYPosition = currentYPosition;
+            this.backspaceCount = backspaceCount;
+            this.backspaceCanvasData = backspaceCanvasData;
             this.buffer = buffer;
         }
         Console.prototype.init = function () {
@@ -44,13 +50,30 @@ var TSOS;
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
+                    // backspace key pressed
+                }
+                else if (chr == String.fromCharCode(8)) {
+                    //backspace count is greater than 0 
+                    if (this.backspaceCount != 0) {
+                        //revert back to data before last char was written
+                        _DrawingContext.putImageData(this.backspaceCanvasData.pop(), 0, 0);
+                        //go back to x position
+                        this.currentXPosition = this.lastXPosition.pop();
+                        //update backspacecount
+                        this.backspaceCount -= 1;
+                    }
+                    //update buffer to acount for backspace
+                    this.buffer = this.buffer.substring(0, this.buffer.length - 1);
                 }
                 else {
-                    // This is a "normal" character, so ...
+                    // This is a "normal" character, so reference image data for backspace
+                    this.backspaceCanvasData.push(_DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height));
                     // ... draw it on the screen...
                     this.putText(chr);
                     // ... and add it to our buffer.
                     this.buffer += chr;
+                    //update backspace count
+                    this.backspaceCount++;
                 }
                 // TODO: Write a case for Ctrl-C.
             }
@@ -65,8 +88,13 @@ var TSOS;
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
             if (text !== "") {
+                //line wrapping
+                if (this.currentXPosition >= 480) {
+                    this.advanceLine();
+                }
                 // Draw the text at the current X and Y coordinates.
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
+                this.lastXPosition.push(this.currentXPosition);
                 // Move the current X position.
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
                 this.currentXPosition = this.currentXPosition + offset;

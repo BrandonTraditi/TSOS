@@ -48,20 +48,63 @@ var TSOS;
             _Kernel.krnTrace("Key code:" + keyCode + " shifted:" + isShifted);
             var chr = "";
             // Check to see if we even want to deal with the key that was pressed.
-            if ((keyCode >= 65) && (keyCode <= 90)) { // letter
-                if (isShifted === true) {
-                    chr = String.fromCharCode(keyCode); // Uppercase A-Z
+            if (((keyCode >= 65) && (keyCode <= 90)) || //A..Z
+                ((keyCode >= 97) && (keyCode <= 123))) { //a..z
+                //lowercase character display
+                chr = String.fromCharCode(keyCode + 32);
+                //check for shift key and adjust accordingly
+                if (isShifted) {
+                    chr = String.fromCharCode(keyCode);
                 }
-                else {
-                    chr = String.fromCharCode(keyCode + 32); // Lowercase a-z
-                }
-                // TODO: Check for caps-lock and handle as shifted if so.
                 _KernelInputQueue.enqueue(chr);
             }
             else if (((keyCode >= 48) && (keyCode <= 57)) || // digits
                 (keyCode == 32) || // space
-                (keyCode == 13)) { // enter
-                chr = String.fromCharCode(keyCode);
+                (keyCode == 8) || //backspace
+                (keyCode == 38) || // up
+                (keyCode == 40) || // down
+                (keyCode == 13) || // enter
+                (keyCode == 9) || // tab
+                (keyCode == 222)) { //single quote
+                if (keyCode == 48 && isShifted) {
+                    chr = ")";
+                }
+                else if (keyCode == 49 && isShifted) {
+                    chr = "!";
+                }
+                else if (keyCode == 50 && isShifted) {
+                    chr = "@";
+                }
+                else if (keyCode == 51 && isShifted) {
+                    chr = "#";
+                }
+                else if (keyCode == 52 && isShifted) {
+                    chr = "$";
+                }
+                else if (keyCode == 53 && isShifted) {
+                    chr = "%";
+                }
+                else if (keyCode == 54 && isShifted) {
+                    chr = "^";
+                }
+                else if (keyCode == 55 && isShifted) {
+                    chr = "&";
+                }
+                else if (keyCode == 56 && isShifted) {
+                    chr = "*";
+                }
+                else if (keyCode == 57 && isShifted) {
+                    chr = "(";
+                }
+                else if (keyCode == 222) {
+                    chr = "'";
+                }
+                else if (keyCode == 222 && isShifted) {
+                    chr = "\"";
+                }
+                else {
+                    chr = String.fromCharCode(keyCode);
+                }
                 _KernelInputQueue.enqueue(chr);
             }
         };
