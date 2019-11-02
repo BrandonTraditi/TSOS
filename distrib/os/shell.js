@@ -49,6 +49,15 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+            //date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the Date.");
+            this.commandList[this.commandList.length] = sc;
+            //whereami
+            sc = new TSOS.ShellCommand(this.shellWhereAmI, "whereami", "- Finds your soul");
+            this.commandList[this.commandList.length] = sc;
+            //SuperBowl Prediction
+            sc = new TSOS.ShellCommand(this.shellPrediction, "prediction", "- Prediction for SuperBowl LIV");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -89,13 +98,13 @@ var TSOS;
             }
             else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
-                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) {
+                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) { // Check for curses.
                     this.execute(this.shellCurse);
                 }
-                else if (this.apologies.indexOf("[" + cmd + "]") >= 0) {
+                else if (this.apologies.indexOf("[" + cmd + "]") >= 0) { // Check for apologies.
                     this.execute(this.shellApology);
                 }
-                else {
+                else { // It's just a bad command. {
                     this.execute(this.shellInvalidCommand);
                 }
             }
@@ -195,6 +204,36 @@ var TSOS;
                     case "help":
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
+                    case "ver":
+                        _StdOut.putText("Displays the current version Data.");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("Shut down the virtual OS but leaves the underlying host/hardware simulation running.");
+                        break;
+                    case "cls":
+                        _StdOut.putText("Clears the screen and resets the cursor position.");
+                        break;
+                    case "man":
+                        _StdOut.putText("Displays the Manual page for <topic>.");
+                        break;
+                    case "trace":
+                        _StdOut.putText("<on | off> - Turns the OS trace on or off.");
+                        break;
+                    case "mrot13":
+                        _StdOut.putText("Does rot13 obfuscation on <string>.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Sets the prompt.");
+                        break;
+                    case "date":
+                        _StdOut.putText("Displays the date and time.");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Finds where your soul is.");
+                        break;
+                    case "prediction":
+                        _StdOut.putText("Super Bowl LIV prediction");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -245,6 +284,16 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        };
+        Shell.prototype.shellDate = function (args) {
+            var d = new Date();
+            _StdOut.putText(d.toString());
+        };
+        Shell.prototype.shellWhereAmI = function (args) {
+            _StdOut.putText("Follow your soul, it knows the way");
+        };
+        Shell.prototype.shellPrediction = function (args) {
+            _StdOut.putText("Superbowl LIV predictions:Patriots 24 - Packers 10");
         };
         return Shell;
     }());

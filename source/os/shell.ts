@@ -82,19 +82,19 @@ module TSOS {
             //date
             sc = new ShellCommand(this.shellDate,
                                   "date",
-                                  "Displays the Date.");
+                                  "- Displays the Date.");
             this.commandList[this.commandList.length] = sc;
 
             //whereami
             sc = new ShellCommand(this.shellWhereAmI,
                                   "whereami",
-                                  "Finds your soul");   
+                                  "- Finds your soul");   
             this.commandList[this.commandList.length] = sc;
 
             //SuperBowl Prediction
             sc = new ShellCommand(this.shellPrediction,
                                  "prediction",
-                                 "Prediction for SuperBowl LIV");
+                                 "- Prediction for SuperBowl LIV");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -336,8 +336,8 @@ module TSOS {
         }
 
         public shellDate(args: string[]) {
-            var d = new Date().toLocaleDateString;
-            _StdOut.putText(d);
+            var d = new Date();
+            _StdOut.putText(d.toString());
         }
 
         public shellWhereAmI(args: string[]) {
