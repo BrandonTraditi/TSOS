@@ -48,6 +48,12 @@ var TSOS;
                 _GLaDOS = new Glados();
                 _GLaDOS.init();
             }
+            function timeDisplay() {
+                var time = new Date();
+                document.getElementById("timeDisplay").innerHTML = time.toString();
+                var timeOut = setTimeout(timeDisplay, 500);
+            }
+            timeDisplay();
         };
         Control.hostLog = function (msg, source) {
             if (source === void 0) { source = "?"; }
@@ -81,6 +87,7 @@ var TSOS;
             // .. and call the OS Kernel Bootstrap routine.
             _Kernel = new TSOS.Kernel();
             _Kernel.krnBootstrap(); // _GLaDOS.afterStartup() will get called in there, if configured.
+            TSOS.Utils.statusUpdate("Host Online");
         };
         Control.hostBtnHaltOS_click = function (btn) {
             Control.hostLog("Emergency halt", "host");

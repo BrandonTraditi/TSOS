@@ -43,5 +43,9 @@ module TSOS {
             }
             return retVal;
         }
+        public static statusUpdate(s: string){
+            document.getElementById("statusDisplay").innerHTML = s;
+
+        }
     }
 }

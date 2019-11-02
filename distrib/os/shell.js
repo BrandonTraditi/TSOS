@@ -58,6 +58,8 @@ var TSOS;
             //SuperBowl Prediction
             sc = new TSOS.ShellCommand(this.shellPrediction, "prediction", "- Prediction for SuperBowl LIV");
             this.commandList[this.commandList.length] = sc;
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "- Updates status");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -294,6 +296,13 @@ var TSOS;
         };
         Shell.prototype.shellPrediction = function (args) {
             _StdOut.putText("Superbowl LIV predictions:Patriots 24 - Packers 10");
+        };
+        Shell.prototype.shellStatus = function (args) {
+            var s = "";
+            for (var i = 0; i < args.length; i++) {
+                s = s + " " + args[i];
+            }
+            TSOS.Utils.statusUpdate(s);
         };
         return Shell;
     }());

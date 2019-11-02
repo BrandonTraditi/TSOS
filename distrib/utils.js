@@ -44,6 +44,9 @@ var TSOS;
             }
             return retVal;
         };
+        Utils.statusUpdate = function (s) {
+            document.getElementById("statusDisplay").innerHTML = s;
+        };
         return Utils;
     }());
     TSOS.Utils = Utils;

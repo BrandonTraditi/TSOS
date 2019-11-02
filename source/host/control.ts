@@ -55,6 +55,13 @@ module TSOS {
                 _GLaDOS = new Glados();
                 _GLaDOS.init();
             }
+
+            function timeDisplay(){
+                var time = new Date();
+                document.getElementById("timeDisplay").innerHTML = time.toString();
+                var timeOut = setTimeout(timeDisplay,500);
+            }
+            timeDisplay();
         }
 
         public static hostLog(msg: string, source: string = "?"): void {
@@ -98,6 +105,7 @@ module TSOS {
             // .. and call the OS Kernel Bootstrap routine.
             _Kernel = new Kernel();
             _Kernel.krnBootstrap();  // _GLaDOS.afterStartup() will get called in there, if configured.
+            Utils.statusUpdate("Host Online");
         }
 
         public static hostBtnHaltOS_click(btn): void {

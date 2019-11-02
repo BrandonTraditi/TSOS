@@ -97,6 +97,11 @@ module TSOS {
                                  "- Prediction for SuperBowl LIV");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellStatus,
+                "status",
+                "- Updates status");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -346,6 +351,14 @@ module TSOS {
 
         public shellPrediction(args: string[]) {
             _StdOut.putText("Superbowl LIV predictions:Patriots 24 - Packers 10");
+        }
+
+        public shellStatus(args){
+            var s = "";
+            for(var i = 0; i < args.length; i++){
+                s = s + " " + args[i];
+            }
+            Utils.statusUpdate(s);
         }
 
     }
