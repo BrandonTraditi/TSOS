@@ -125,7 +125,10 @@ module TSOS {
                         }
                     //down key
                     }else{
-                        
+                        if(this.cmdIndex != this.shellArray.length-1){
+                            cmd = this.shellArray[this.cmdIndex+1];
+                            this.cmdIndex ++;
+                        }
                     }
                     //have to delete the characters from the buffer if its not empty
                     if(this.buffer.length > 0){
