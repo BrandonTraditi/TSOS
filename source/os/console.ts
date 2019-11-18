@@ -20,6 +20,8 @@ module TSOS {
                     public currentYPosition = _DefaultFontSize,
                     public backspaceCount = 0,
                     public backspaceCanvasData = [],
+                    public shellArray = [],
+                    public cmdIndex = 0,
                     public buffer = "") {
         }
 
@@ -46,6 +48,10 @@ module TSOS {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    //Adds command to array for up and down keys to navigate
+                    this.shellArray.push(this.buffer);
+                    //constantly keep command index equal to the
+                    this.cmdIndex = this.shellArray.length-1;
                     // ... and reset our buffer.
                     this.buffer = "";
 
@@ -97,6 +103,47 @@ module TSOS {
                     }
 
 
+                }else if (chr == String.fromCharCode(38) || chr == String.fromCharCode(40)){
+                    var cmd;
+                    //up key
+                    if(chr == String.fromCharCode(38)){
+                        //check if index does not equal length of array
+                        if(this.cmdIndex != this.shellArray.length -1){
+                            //finds the start of the array and stops
+                            if(this.cmdIndex - 1 < 0){
+                                cmd = this.shellArray[this.cmdIndex];
+                                this.cmdIndex = 0;
+                            //going downward on the index/array reciting each command
+                            }else{
+                                cmd = this.shellArray[this.cmdIndex];
+                                this.cmdIndex --;
+                            }
+                        //should be the last command entered
+                        }else{
+                            cmd = this.shellArray[this.cmdIndex];
+                            this.cmdIndex --;
+                        }
+                    //down key
+                    }else{
+                        
+                    }
+                    //have to delete the characters from the buffer if its not empty
+                    if(this.buffer.length > 0){
+                        for(var i = 0; i < this.buffer.length; i++){
+                            this.currentXPosition = this.lastXPosition.pop();
+                            _DrawingContext.putImageData(this.backspaceCanvasData.pop(),0,0);
+                            this.backspaceCount --;
+                        }
+                        this.buffer = "";
+                    }
+                    //draw the command on to the canvas
+                    for(var i = 0; i < cmd.length; i++){
+                        this.backspaceCanvasData.push(_DrawingContext.getImageData(0,0,_Canvas.width, _Canvas.height));
+                        this.putText(cmd.charAt(i));
+                        this.buffer += cmd.charAt(i);
+                        this.backspaceCount++;
+                    }
+                    
                 }else {
                     // This is a "normal" character, so reference image data for backspace
                     this.backspaceCanvasData.push(_DrawingContext.getImageData(0,0,_Canvas.width,_Canvas.height));
