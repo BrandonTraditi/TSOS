@@ -105,8 +105,8 @@ module TSOS {
             
             //BSOD
             sc = new ShellCommand(this.shellBSOD,
-                "BSOD",
-               "- Displays BSOD error");
+                                "bluedeath",
+                                "- Displays BSOD error");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -297,8 +297,8 @@ module TSOS {
                     case "prediction":
                         _StdOut.putText("Super Bowl LIV prediction");
                         break;
-                    case "BSOD error":
-                        _StdOut.putText("-Initalizes BSOD error");
+                    case "BSOD":
+                        _StdOut.putText("Initalizes BSOD error");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
@@ -370,7 +370,7 @@ module TSOS {
             }
             Utils.statusUpdate(s);
         }
-        
+
         public shellBSOD(args){
             _Kernel.krnTrapError("BSOD has been initalized!");
         }
