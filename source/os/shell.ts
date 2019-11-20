@@ -98,10 +98,14 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
             sc = new ShellCommand(this.shellStatus,
-                "status",
-                "- Updates status");
+                                 "status",
+                                "- Updates status");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellBSOD,
+                "BSOD",
+               "- Displays BSOD error");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -289,6 +293,9 @@ module TSOS {
                         break;
                     case "prediction":
                         _StdOut.putText("Super Bowl LIV prediction");
+                        break;
+                    case "BSOD error":
+                        _StdOut.putText("-Initalizes BSOD error");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
