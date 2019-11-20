@@ -96,16 +96,19 @@ module TSOS {
                                  "prediction",
                                  "- Prediction for SuperBowl LIV");
             this.commandList[this.commandList.length] = sc;
-
+            
+            //Status
             sc = new ShellCommand(this.shellStatus,
                                  "status",
                                 "- Updates status");
             this.commandList[this.commandList.length] = sc;
-
+            
+            //BSOD
             sc = new ShellCommand(this.shellBSOD,
                 "BSOD",
                "- Displays BSOD error");
             this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -366,6 +369,10 @@ module TSOS {
                 s = s + " " + args[i];
             }
             Utils.statusUpdate(s);
+        }
+        
+        public shellBSOD(args){
+            _Kernel.krnTrapError("BSOD has been initalized!");
         }
 
     }
