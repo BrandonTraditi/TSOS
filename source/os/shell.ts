@@ -109,6 +109,14 @@ module TSOS {
                                 "- Displays BSOD error");
             this.commandList[this.commandList.length] = sc;
 
+            //Load
+            sc = new ShellCommand(this.shellLoad,
+                "load",
+                "- Validates users code");
+            this.commandList[this.commandList.length] = sc;
+
+            
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -300,7 +308,10 @@ module TSOS {
                     case "BSOD":
                         _StdOut.putText("Initalizes BSOD error");
                         break;
-                    // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "load":
+                        _StdOut.putText("Validate and load user program");
+                        break;
+
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
