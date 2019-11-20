@@ -74,7 +74,7 @@ module TSOS {
                     var index = 0;
                     var counter = 0;
                     //List of shell Commands to check with whats in current buffer
-                    var shellCommands = ["ver", "help", "shutdown", "cls", "man", "trace", "rot13", "prompt", "date", "whereami", "prediction", "status", "bsod"];
+                    var shellCommands = ["ver", "help", "shutdown", "cls", "man", "trace", "rot13", "prompt", "date", "whereami", "prediction", "status", "bsod", "load"];
                     //loop to check if buffer index char = shell list command 
                     for(var i = 0; i < shellCommands.length; i++){
                         var temp = 0;

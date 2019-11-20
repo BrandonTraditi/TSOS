@@ -299,6 +299,9 @@ module TSOS {
                     case "date":
                         _StdOut.putText("Displays the date and time.");
                         break;
+                    case "status":
+                        _StdOut.putText("Displays new status update");
+                        break;
                     case "whereami":
                         _StdOut.putText("Finds where your soul is.");
                         break;
@@ -384,6 +387,31 @@ module TSOS {
 
         public shellBSOD(args){
             _Kernel.krnTrapError("BSOD has been initalized!");
+        }
+
+        public shellLoad(args){
+            //get user input and store in a var to check
+            var userInput = (<HTMLInputElement>document.getElementById("taProgramInput")).value;
+            //store all valid hex char into array to check user input to
+            var validHex = [" ","0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F",];
+            //if/else for input 
+            if(userInput == " "){
+                _StdOut.putText("Please input a program");
+            }else{
+                //nested for loops to check user input to the valid hex array
+                var counter = 0;
+                for(var i = 0; i < userInput.length; i++){
+                    var currChar = userInput.charAt[i];
+                    for(var j = 0; j < validHex.length; j++){
+                        if(currChar == validHex[j]){
+                            counter++;
+                        }
+                    }
+                }
+            }
+            if(counter == userInput.length){
+                _StdOut.putText("All inputs are valid Hex Characters");
+            }
         }
 
     }
