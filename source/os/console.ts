@@ -64,7 +64,7 @@ module TSOS {
                         //go back to x position
                         this.currentXPosition = this.lastXPosition.pop();
                         //update backspacecount
-                        this.backspaceCount -= 1;
+                        this.backspaceCount --;
                     }
                     //update buffer to acount for backspace
                     this.buffer = this.buffer.substring(0, this.buffer.length - 1);
@@ -172,7 +172,7 @@ module TSOS {
             //         Consider fixing that.
             if (text !== "") {
                 //line wrapping
-                if(this.currentXPosition >= 480){
+                if(this.currentXPosition >= 490){
                     this.advanceLine();
                 }
 
@@ -196,7 +196,12 @@ module TSOS {
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
 
-            // TODO: Handle scrolling. (iProject 1)
+            //scrolling implementation
+            if(this.currentYPosition > _Canvas.height){
+                var currScreen = _DrawingContext.getImageData(0,20,_Canvas.width, _Canvas.height);
+                _DrawingContext.putImageData(currScreen,0,0);
+                this.currentYPosition = 490;
+            }
         }
     }
  }
