@@ -411,6 +411,8 @@ module TSOS {
             }
             if(counter == userInput.length){
                 _StdOut.putText("All inputs are valid Hex Characters");
+            }else{
+                _StdOut.putText("Sorry there is an invalid command");
             }
         }
 
