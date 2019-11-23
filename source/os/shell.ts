@@ -2,6 +2,13 @@
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
+///<reference path="processManager.ts" />
+///<reference path="memoryManager.ts" />
+///<reference path="pcb.ts" />
+
+
+
+
 
 
 /* ------------
@@ -409,11 +416,20 @@ module TSOS {
                     }
                 }
             }
-            if(counter == userInput.length){
-                _StdOut.putText("All inputs are valid Hex Characters");
-            }else{
-                _StdOut.putText("Sorry there is an invalid command");
-            }
+            var program = userInput.split(" ");
+
+            // if(counter == userInput.length){
+                if(args.length > 0) {
+                    _ProcessManager.createProcess(program, args[0]);
+                }
+                else {
+                    _ProcessManager.createProcess(program);
+                }
+            // }else{
+            //     _StdOut.putText("Sorry there is an invalid hex");
+            // }
+
+
         }
 
     }
