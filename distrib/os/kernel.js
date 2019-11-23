@@ -31,6 +31,10 @@ var TSOS;
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
             _StdOut = _Console;
+            _Memory = new TSOS.Memory();
+            _Memory.init();
+            _MemoryManager = new TSOS.memoryManager();
+            _ProcessManager = new TSOS.ProcessManager();
             // Load the Keyboard Device Driver
             this.krnTrace("Loading the keyboard device driver.");
             _krnKeyboardDriver = new TSOS.DeviceDriverKeyboard(); // Construct it.
@@ -155,6 +159,16 @@ var TSOS;
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
             // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
+            //restart console
+            _Console.init();
+            //change color to blue
+            _DrawingContext.rect(0, 0, _Canvas.width, _Canvas.height);
+            _DrawingContext.fillStyle = "blue";
+            _DrawingContext.fill();
+            //Write small message to explain error
+            _DrawingContext.fillStyle = "white";
+            _DrawingContext.font = "20px Courier New";
+            _DrawingContext.fillText('You are an Idiot', 50, 50);
             this.krnShutdown();
         };
         return Kernel;

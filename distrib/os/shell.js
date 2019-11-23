@@ -2,6 +2,9 @@
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
+///<reference path="processManager.ts" />
+///<reference path="memoryManager.ts" />
+///<reference path="pcb.ts" />
 /* ------------
    Shell.ts
 
@@ -58,7 +61,14 @@ var TSOS;
             //SuperBowl Prediction
             sc = new TSOS.ShellCommand(this.shellPrediction, "prediction", "- Prediction for SuperBowl LIV");
             this.commandList[this.commandList.length] = sc;
+            //Status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "- Updates status");
+            this.commandList[this.commandList.length] = sc;
+            //BSOD
+            sc = new TSOS.ShellCommand(this.shellBSOD, "bluedeath", "- Displays BSOD error");
+            this.commandList[this.commandList.length] = sc;
+            //Load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates users code");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -230,13 +240,21 @@ var TSOS;
                     case "date":
                         _StdOut.putText("Displays the date and time.");
                         break;
+                    case "status":
+                        _StdOut.putText("Displays new status update");
+                        break;
                     case "whereami":
                         _StdOut.putText("Finds where your soul is.");
                         break;
                     case "prediction":
                         _StdOut.putText("Super Bowl LIV prediction");
                         break;
-                    // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "BSOD":
+                        _StdOut.putText("Initalizes BSOD error");
+                        break;
+                    case "load":
+                        _StdOut.putText("Validate and load user program");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -303,6 +321,42 @@ var TSOS;
                 s = s + " " + args[i];
             }
             TSOS.Utils.statusUpdate(s);
+        };
+        Shell.prototype.shellBSOD = function (args) {
+            _Kernel.krnTrapError("BSOD has been initalized!");
+        };
+        Shell.prototype.shellLoad = function (args) {
+            //get user input and store in a var to check
+            var userInput = document.getElementById("taProgramInput").value;
+            //store all valid hex char into array to check user input to
+            var validHex = [" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F",];
+            //if/else for input 
+            if (userInput == " ") {
+                _StdOut.putText("Please input a program");
+            }
+            else {
+                //nested for loops to check user input to the valid hex array
+                var counter = 0;
+                for (var i = 0; i < userInput.length; i++) {
+                    var currChar = userInput.charAt[i];
+                    for (var j = 0; j < validHex.length; j++) {
+                        if (currChar == validHex[j]) {
+                            counter++;
+                        }
+                    }
+                }
+            }
+            var program = userInput.split(" ");
+            // if(counter == userInput.length){
+            if (args.length > 0) {
+                _ProcessManager.createProcess(program, args[0]);
+            }
+            else {
+                _ProcessManager.createProcess(program);
+            }
+            // }else{
+            //     _StdOut.putText("Sorry there is an invalid hex");
+            // }
         };
         return Shell;
     }());
