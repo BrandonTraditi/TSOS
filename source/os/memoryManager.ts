@@ -4,7 +4,7 @@ module TSOS{
     export class memoryManager{
 
         constructor(
-            public partition = [
+            public partitions = [
 
                 {
                     available: true,
@@ -15,14 +15,14 @@ module TSOS{
 
                 {
                     available: true,
-                    index: 0,
+                    index: 1,
                     base: 256,
                     limit: 511
                 },
 
                 {
                     available: true,
-                    index: 0,
+                    index: 2,
                     base: 512,
                     limit: 767
                 }
@@ -30,7 +30,28 @@ module TSOS{
 
         ){};
 
-        
-    }
+        public writeProgramToMemory(parition: number, program): void{
+            _Memory.write(parition, program);
+        }
 
+        public getAvailbepartitions(): number {
+
+            if(this.partitions[0].available){
+                this.partitions[0].available = false;
+                return this.partitions[0].index;
+            }
+            else if (this.partitions[1].available){
+                this.partitions[1].available = false;
+                return this.partitions[1].index;
+            }
+            else if (this.partitions[2].available){
+                this.partitions[2].available = false;
+                return this.partitions[2].index;
+            }
+            else{
+                return -1;
+            }
+
+        }
+    }
 }
