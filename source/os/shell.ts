@@ -396,19 +396,19 @@ module TSOS {
             _Kernel.krnTrapError("BSOD has been initalized!");
         }
 
-        public shellLoad(args){
+        public shellLoad(){
             //get user input and store in a var to check
             var userInput = (<HTMLInputElement>document.getElementById("taProgramInput")).value;
             //store all valid hex char into array to check user input to
-            var validHex = [" ","0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F",];
+            var validHex = [" ","0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
             //if/else for input 
-            if(userInput == " "){
-                _StdOut.putText("Please input a program");
+            if(userInput == ""){
+                _StdOut.putText("Please input a program. ");
             }else{
                 //nested for loops to check user input to the valid hex array
                 var counter = 0;
                 for(var i = 0; i < userInput.length; i++){
-                    var currChar = userInput.charAt[i];
+                    var currChar = userInput.charAt(i);
                     for(var j = 0; j < validHex.length; j++){
                         if(currChar == validHex[j]){
                             counter++;
@@ -416,18 +416,12 @@ module TSOS {
                     }
                 }
             }
-            var program = userInput.split(" ");
 
-            // if(counter == userInput.length){
-                if(args.length > 0) {
-                    _ProcessManager.createProcess(program, args[0]);
-                }
-                else {
-                    _ProcessManager.createProcess(program);
-                }
-            // }else{
-            //     _StdOut.putText("Sorry there is an invalid hex");
-            // }
+            if(counter == userInput.length){
+                _StdOut.putText("This is valid hex");
+            }else{
+                _StdOut.putText("This is not valid hex");
+            }
 
 
         }
