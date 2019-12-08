@@ -1,10 +1,9 @@
-///<reference path="../globals.ts" />
+ ///<reference path="../globals.ts" />
 
 module TSOS{
     export class PCB{
         public pid: number;
         public state: string = "New";
-        public priority: number = 64;
         public programCounter: number = 0;
         public instructionReg: string = null;
         public accumlator: number = 0;
@@ -16,6 +15,20 @@ module TSOS{
 
         constructor(p){
             this.pid = p;
+        }
+
+        public updatePCB(
+                pc: number,
+                Acc: number,
+                xReg: number,
+                Yreg: number,
+                Zflag: number
+        ): void{
+            this.programCounter = pc;
+            this.accumlator = Acc;
+            this.x = xReg;
+            this.y = Yreg;
+            this.z = Zflag;
         }
     }
 }
