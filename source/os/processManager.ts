@@ -12,24 +12,28 @@ module TSOS{
 
         public currentPCB: TSOS.PCB;
 
-        public createProcess(program: Array<string>, priority?): void{
+        public createProcess(program: Array<string>): void{
             var partitionIndex = _MemoryManager.getAvailbepartitions();
 
             if(partitionIndex != -1){
 
+                //PID counter
                 _PID++;
+                //Create new pcb
                 var pcb = new PCB(_PID);
+                //Push pcb to process array
                 this.processArray.push(pcb);
+                //after finding available partition, assign it to pcb
                 pcb.partitionIndex = partitionIndex;
-                if(priority != null){
-                    pcb.priority = Number(priority)
-                }else{
-                    pcb.priority = 64;
-                }
+                //write process to memory with assigned index
                 _MemoryManager.writeProgramToMemory(pcb.partitionIndex, program);
+                //add pcb to wait queue 
                 this.waitQueue.enqueue(pcb);
+                //set indtruction registry 
                 pcb.instructionReg = _Memory.readMemory(pcb.partitionIndex, pcb.programCounter);
+                //set location
                 pcb.location = "MEMORY";
+                //used for debugging
                 console.log("pcb", pcb);
                 console.log("program: ", program);
             }else{

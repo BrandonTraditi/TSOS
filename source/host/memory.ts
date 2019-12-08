@@ -8,12 +8,12 @@ module TSOS{
         public init(): void{
             //array of 3 blocks of memory
             this.memory = new Array(768);
-            //fills each block of memory wi
+            //fills each block of memory with 00 to begin
             for(var i= 0; i < this.memory.length; i++){
                 this.memory[i]= "00";
             }
         }
-
+        // read memory block in particular partition 
         public readMemory(partition: number, PC: number): string {
             let location = PC;
             if(partition == 1){
@@ -24,7 +24,7 @@ module TSOS{
             }
             return this.memory[location];
         }
-
+        //slice location to get the block of the program
         public getProgram(partition: number, PC: number){
             let location = PC;
             if(partition == 1){
@@ -35,7 +35,7 @@ module TSOS{
             }
             return this.memory.slice(location, location + 255);
         }
-
+        //used from write funtion to write the block of the program
         public writeByte(partition: number, location: number, byteData: string): void {
             if(partition == 1){
                 location += 256;
@@ -45,14 +45,14 @@ module TSOS{
             }
             this.memory[location] = byteData;
         }
-
+        //uses writebyte to write program block
         public write(partition: number, program): void{
             for(let i = 0; i < program.length; i++){
                 this.writeByte(partition, i, program[i]);
             }
 
         }
-
+        //clears all memory
         public clearMemory(parition:number): void{
             for(let i = 0; i < this.memory.length; i++){
                 this.memory[i] = "00";
@@ -62,25 +62,21 @@ module TSOS{
                 _MemoryManager.partitions[i].available = true;
             }
         }
-
+        //clears particular memory block based on partition index
         public clearMemoryPartition(partition: number): void{
-            switch(partition){
-                case 0:
-                    for(let i = 0; i < 256; i++){
-                        this.memory[i] = "00";
-                    }
-                    break;
-                case 1:
-                     for(let i = 256; i < 512; i++){
-                        this.memory[i] = "00";
-                    }
-                    break;
-                case 3:
-                    for(let i = 513; i < 768; i++){
-                        this.memory[i] = "00";
-                    }
-                    break;
-            }
+           if(partition == 0){
+               for(var i = 0; i < 256; i++){
+                   this.memory[i] = "00"
+               }
+           }else if(partition == 1){
+               for(var i = 256; i < 512; i++){
+                   this.memory[i] = "00"
+               }
+           }else if(partition == 2){
+               for(var i = 513; i < 768; i++){
+                   this.memory[i] = "00"
+               }
+           }
             _MemoryManager.partitions[partition].available = true;
         }
 
