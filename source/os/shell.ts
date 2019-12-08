@@ -396,7 +396,7 @@ module TSOS {
             _Kernel.krnTrapError("BSOD has been initalized!");
         }
 
-        public shellLoad(){
+        public shellLoad(args){
             //get user input and store in a var to check
             var userInput = (<HTMLInputElement>document.getElementById("taProgramInput")).value;
             //store all valid hex char into array to check user input to
@@ -417,8 +417,14 @@ module TSOS {
                 }
             }
 
+            //split array of Hex into individual codes
+            var program = userInput.split(" ");
+
+            //Check if code is valid Hex
             if(counter == userInput.length){
+                //Alert it is valid and create a new process 
                 _StdOut.putText("This is valid hex");
+                _ProcessManager.createProcess(program);
             }else{
                 _StdOut.putText("This is not valid hex");
             }
