@@ -24,7 +24,9 @@ module TSOS {
                     public Xreg: number = 0,
                     public Yreg: number = 0,
                     public Zflag: number = 0,
-                    public isExecuting: boolean = false) {
+                    public isExecuting: boolean = false,
+                    public currentPCB: TSOS.PCB = null,
+                    public instruction: string = 'NA') {
 
         }
 
@@ -37,10 +39,81 @@ module TSOS {
             this.isExecuting = false;
         }
 
+        //load register from pcb 
+        public loadPCB(): void{
+            this.PC = this.currentPCB.programCounter;
+            this.Acc = this.currentPCB.accumlator;
+            this.Xreg = this.currentPCB.x;
+            this.Yreg = this.currentPCB.y;
+            this.Zflag = this.currentPCB.z;
+            
+        }
+
+        public loadProgram(pcb: TSOS.PCB): void{
+            this.currentPCB = pcb;
+            this.loadPCB();
+        }
+
+        public updatePCB(): void{
+            if(this.currentPCB !== null){
+                this.currentPCB.updatePCB(this.PC, this.Xreg, this.Yreg, this.Xreg, this.Zflag);
+                //need to create memory display and update here
+            }
+        }
+
         public cycle(): void {
-            _Kernel.krnTrace('CPU cycle');
-            // TODO: Accumulate CPU usage and profiling statistics here.
-            // Do the real work here. Be sure to set this.isExecuting appropriately.
+
+            if(this.currentPCB !== null && this.isExecuting == true){
+               _Kernel.krnTrace('CPU cycle');
+               // TODO: Accumulate CPU usage and profiling statistics here.
+                // Do the real work here. Be sure to set this.isExecuting appropriately.
+                
+                //get instruction
+               var currentInstruction = _Memory.readMemory(this.currentPCB.partitionIndex, this.PC).toUpperCase();
+                this.instruction = currentInstruction;
+
+                //Decide what to do with instruction
+                if(this.instruction == "A9"){
+                    //load acc with a constant
+                }else if(this.instruction == "AD"){
+                    //load acc from memory
+                }else if(this.instruction == "8D"){
+                    //store acc in memory
+                }else if(this.instruction == "6D"){
+                    //add contents from address to acc 
+                }else if(this.instruction == "A2"){
+                    // load x reg with constant
+                }else if(this.instruction == "AE"){
+                    //load x reg from memory
+                }else if(this.instruction == "A0"){
+                    //load y reg with constant
+                }else if(this.instruction == "AC"){
+                   //load y reg from memory
+                }else if(this.instruction == "EC"){
+                  //compare byte at address to x reg, set z flag
+                }else if(this.instruction == "D0"){
+                    //Branch N bytesif z flag = 0
+                }else if(this.instruction == "EE"){
+                   //increment byte
+                }else if(this.instruction == "FF"){
+                   //system call
+                }else if(this.instruction == "EA"){
+                  //no op
+                }else if(this.instruction == "00"){
+                  //break program
+                }else{
+                  _StdOut.putText("Not an applical instruction:"+ _Memory.readMemory(this.currentPCB.partitionIndex, this.PC));
+                  this.isExecuting = false;
+            }          
+            
+            } 
+            //keep pcb updated
+            if(this.currentPCB !== null){
+                this.updatePCB();
+            }
+
+            //Need to create/upodate memory display
+
         }
     }
 }
