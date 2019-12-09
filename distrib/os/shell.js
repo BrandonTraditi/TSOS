@@ -70,6 +70,9 @@ var TSOS;
             //Load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates users code");
             this.commandList[this.commandList.length] = sc;
+            //Run
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "Runs a proccess");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -255,6 +258,9 @@ var TSOS;
                     case "load":
                         _StdOut.putText("Validate and load user program");
                         break;
+                    case "run":
+                        _StdOut.putText("Runs a process");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -329,16 +335,16 @@ var TSOS;
             //get user input and store in a var to check
             var userInput = document.getElementById("taProgramInput").value;
             //store all valid hex char into array to check user input to
-            var validHex = [" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F",];
+            var validHex = [" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
             //if/else for input 
-            if (userInput == " ") {
-                _StdOut.putText("Please input a program");
+            if (userInput == "") {
+                _StdOut.putText("Please input a program. ");
             }
             else {
                 //nested for loops to check user input to the valid hex array
                 var counter = 0;
                 for (var i = 0; i < userInput.length; i++) {
-                    var currChar = userInput.charAt[i];
+                    var currChar = userInput.charAt(i);
                     for (var j = 0; j < validHex.length; j++) {
                         if (currChar == validHex[j]) {
                             counter++;
@@ -346,17 +352,48 @@ var TSOS;
                     }
                 }
             }
+            //split array of Hex into individual codes
             var program = userInput.split(" ");
-            // if(counter == userInput.length){
-            if (args.length > 0) {
-                _ProcessManager.createProcess(program, args[0]);
-            }
-            else {
+            //Check if code is valid Hex
+            if (counter == userInput.length) {
+                //Alert it is valid and create a new process 
+                _StdOut.putText("This is valid hex");
                 _ProcessManager.createProcess(program);
             }
-            // }else{
-            //     _StdOut.putText("Sorry there is an invalid hex");
-            // }
+            else {
+                _StdOut.putText("This is not valid hex");
+            }
+        };
+        Shell.prototype.shellRun = function (args) {
+            if (args.length > 0) {
+                var pid = args[0];
+                var tempQueue = new TSOS.Queue();
+                var pcbRun = null;
+                var inQueue = false;
+                //Get pcb from wait queue
+                while (_ProcessManager.waitQueue.getSize() > 0) {
+                    var waitPcb = _ProcessManager.waitQueue.dequeue();
+                    if (waitPcb.pid == pid) {
+                        pcbRun = waitPcb;
+                        inQueue = true;
+                    }
+                    else {
+                        tempQueue.enqueue(waitPcb);
+                    }
+                }
+                while (tempQueue.getSize() > 0) {
+                    _ProcessManager.waitQueue.enqueue(tempQueue.dequeue());
+                }
+                if (inQueue) {
+                    _ProcessManager.runProcess(pcbRun);
+                }
+                else {
+                    _StdOut.putText("Pid not found.");
+                }
+            }
+            else {
+                _StdOut.putText("Please supply a Pid");
+            }
         };
         return Shell;
     }());

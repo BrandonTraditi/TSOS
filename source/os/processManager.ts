@@ -46,14 +46,16 @@ module TSOS{
         }
 
         public runProcess(pcb:PCB): void{
-            if(this.runAll = false){
+            if(this.runAll == false){
                 pcb.state = "Running";
                 this.readyQueue.enqueue(pcb);
                 console.log(pcb);
+                _CPU.isExecuting = true;
             }else{
                 pcb.state = "Ready";
                 this.readyQueue.enqueue(pcb);
             }
+            console.log("");
         }
 
 

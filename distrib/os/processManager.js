@@ -3,36 +3,56 @@
 var TSOS;
 (function (TSOS) {
     var ProcessManager = /** @class */ (function () {
-        function ProcessManager(waitQueue, processArray) {
+        function ProcessManager(waitQueue, readyQueue, processArray, runAll) {
             if (waitQueue === void 0) { waitQueue = new TSOS.Queue(); }
+            if (readyQueue === void 0) { readyQueue = new TSOS.Queue(); }
             if (processArray === void 0) { processArray = new Array(); }
+            if (runAll === void 0) { runAll = false; }
             this.waitQueue = waitQueue;
+            this.readyQueue = readyQueue;
             this.processArray = processArray;
+            this.runAll = runAll;
         }
         ;
-        ProcessManager.prototype.createProcess = function (program, priority) {
+        ProcessManager.prototype.createProcess = function (program) {
             var partitionIndex = _MemoryManager.getAvailbepartitions();
             if (partitionIndex != -1) {
+                //PID counter
                 _PID++;
+                //Create new pcb
                 var pcb = new TSOS.PCB(_PID);
+                //Push pcb to process array
                 this.processArray.push(pcb);
+                //after finding available partition, assign it to pcb
                 pcb.partitionIndex = partitionIndex;
-                if (priority != null) {
-                    pcb.priority = Number(priority);
-                }
-                else {
-                    pcb.priority = 64;
-                }
+                //write process to memory with assigned index
                 _MemoryManager.writeProgramToMemory(pcb.partitionIndex, program);
+                //add pcb to wait queue 
                 this.waitQueue.enqueue(pcb);
+                //set indtruction registry 
                 pcb.instructionReg = _Memory.readMemory(pcb.partitionIndex, pcb.programCounter);
+                //set location
                 pcb.location = "MEMORY";
+                //used for debugging
                 console.log("pcb", pcb);
                 console.log("program: ", program);
             }
             else {
                 _StdOut.putText("Program not loaded");
             }
+        };
+        ProcessManager.prototype.runProcess = function (pcb) {
+            if (this.runAll == false) {
+                pcb.state = "Running";
+                this.readyQueue.enqueue(pcb);
+                console.log(pcb);
+                _CPU.isExecuting = true;
+            }
+            else {
+                pcb.state = "Ready";
+                this.readyQueue.enqueue(pcb);
+            }
+            console.log("");
         };
         return ProcessManager;
     }());

@@ -39,21 +39,6 @@ module TSOS {
             this.isExecuting = false;
         }
 
-        //load register from pcb 
-        public loadPCB(): void{
-            this.PC = this.currentPCB.programCounter;
-            this.Acc = this.currentPCB.accumlator;
-            this.Xreg = this.currentPCB.x;
-            this.Yreg = this.currentPCB.y;
-            this.Zflag = this.currentPCB.z;
-            
-        }
-
-        public loadProgram(pcb: TSOS.PCB): void{
-            this.currentPCB = pcb;
-            this.loadPCB();
-        }
-
         public updatePCB(): void{
             if(this.currentPCB !== null){
                 this.currentPCB.updatePCB(this.PC, this.Xreg, this.Yreg, this.Xreg, this.Zflag);
@@ -62,7 +47,7 @@ module TSOS {
         }
 
         public cycle(): void {
-
+            console.log("cycle executing");
             if(this.currentPCB !== null && this.isExecuting == true){
                _Kernel.krnTrace('CPU cycle');
                // TODO: Accumulate CPU usage and profiling statistics here.
@@ -71,6 +56,8 @@ module TSOS {
                 //get instruction
                var currentInstruction = _Memory.readMemory(this.currentPCB.partitionIndex, this.PC).toUpperCase();
                 this.instruction = currentInstruction;
+
+                console.log(this.instruction);
 
                 //Decide what to do with instruction
                 if(this.instruction == "A9"){
