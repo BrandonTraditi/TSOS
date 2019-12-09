@@ -118,8 +118,14 @@ module TSOS {
 
             //Load
             sc = new ShellCommand(this.shellLoad,
-                "load",
-                "- Validates users code");
+                                 "load",
+                                "- Validates users code");
+            this.commandList[this.commandList.length] = sc;
+
+            //Run
+            sc = new ShellCommand(this.shellRun,
+                                 "run",
+                                 "Runs a proccess");
             this.commandList[this.commandList.length] = sc;
 
             
@@ -321,6 +327,9 @@ module TSOS {
                     case "load":
                         _StdOut.putText("Validate and load user program");
                         break;
+                    case "run":
+                        _StdOut.putText("Runs a process");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -429,8 +438,39 @@ module TSOS {
                 _StdOut.putText("This is not valid hex");
             }
 
-
         }
+
+        public shellRun(args){
+            if(args.length > 0){
+                var pid = args[0];
+                var tempQueue: TSOS.Queue = new Queue();
+                var pcbRun: PCB = null;
+                var inQueue: boolean = false;
+
+                //Get pcb from wait queue
+                while(_ProcessManager.waitQueue.getSize() > 0){
+                    var waitPcb = _ProcessManager.waitQueue.dequeue();
+                    if(waitPcb.pid == pid){
+                        pcbRun = waitPcb;
+                        inQueue = true;
+                    }else{
+                        tempQueue.enqueue(waitPcb);
+                    }
+                }
+                while(tempQueue.getSize() > 0){
+                    _ProcessManager.waitQueue.enqueue(tempQueue.dequeue());
+                }
+                if(inQueue){
+                    _ProcessManager.runProcess(pcbRun);
+                }else{
+                    _StdOut.putText("Pid not found.");
+                }
+            }else{
+                _StdOut.putText("Please supply a Pid");
+            }
+        }
+
+    
 
     }
 }
