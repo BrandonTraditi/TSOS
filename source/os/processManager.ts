@@ -7,7 +7,9 @@ module TSOS{
 
         constructor(
             public waitQueue: TSOS.Queue = new Queue(),
-            public processArray: PCB[] = new Array()
+            public readyQueue: TSOS.Queue = new Queue(),
+            public processArray: PCB[] = new Array(),
+            public runAll: boolean = false
         ){};
 
         public currentPCB: TSOS.PCB;
@@ -41,6 +43,17 @@ module TSOS{
             }
 
 
+        }
+
+        public runProcess(pcb:PCB): void{
+            if(this.runAll = false){
+                pcb.state = "Running";
+                this.readyQueue.enqueue(pcb);
+                console.log(pcb);
+            }else{
+                pcb.state = "Ready";
+                this.readyQueue.enqueue(pcb);
+            }
         }
 
 
