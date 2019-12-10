@@ -6,7 +6,7 @@ module TSOS{
         public state: string = "New";
         public programCounter: number = 0;
         public instructionReg: string = null;
-        public accumlator: number = 0;
+        public accumulator: number = 0;
         public x: number = 0;
         public y: number = 0;
         public z: number = 0;
@@ -17,18 +17,12 @@ module TSOS{
             this.pid = p;
         }
 
-        public updatePCB(
-                pc: number,
-                Acc: number,
-                xReg: number,
-                Yreg: number,
-                Zflag: number
-        ): void{
+       /* public updatePCB(pc: number, Acc: number, xReg: number, Yreg: number, Zflag: number): void{
             this.programCounter = pc;
-            this.accumlator = Acc;
+            this.accumulator = Acc;
             this.x = xReg;
             this.y = Yreg;
             this.z = Zflag;
-        }
+        }*/
     }
 }

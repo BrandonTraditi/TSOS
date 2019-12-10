@@ -37,6 +37,7 @@ module TSOS {
         //Load program. Gets called in runProcess 
         public loadProgram(pcb: TSOS.PCB): void{
             this.currentPCB = pcb;
+            //this.currentPCB.state = "Running";
             this.loadFromPCB();
 
         }
@@ -44,19 +45,19 @@ module TSOS {
         //Updates pcb to now run in cycle
         public loadFromPCB(): void{
             this.ProgramCounter = this.currentPCB.programCounter;
-            this.Acc = this.currentPCB.accumlator;
+            this.Acc = this.currentPCB.accumulator;
             this.partitionIndex = this.currentPCB.partitionIndex;
             this.Xreg = this.currentPCB.x;
             this.Yreg = this.currentPCB.y;
             this.Zflag = this.currentPCB.z;
         }
 
-        public updatePCB(): void{
+        /*public updatePCB(): void{
             if(this.currentPCB !== null){
-                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
+                this.currentPCB.updatePCB(this.ProgramCounter, this.acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
-        }
+        }*/
 
         public cycle(): void {
             console.log("cycle executing");
@@ -75,6 +76,7 @@ module TSOS {
                 console.log("partition index: ", this.partitionIndex);
                 console.log("PC before A9: ", this.ProgramCounter);
                 console.log("Acc before run: ", this.Acc);
+                console.log("Acc search: ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16));
 
                 //Decide what to do with instruction
                 if(this.instruction == "A9"){
@@ -82,6 +84,7 @@ module TSOS {
                     //load acc with a constant
                     this.ProgramCounter++;
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    //this.acc = 169;
                     this.ProgramCounter++;
                     console.log("A9 ran: ", this.currentPCB);
                     console.log("PC after A9: ", this.ProgramCounter); 
@@ -115,16 +118,16 @@ module TSOS {
                   //break program
                   this.isExecuting = false;
                 }else{
-                  _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.currentPCB.partitionIndex, this.currentPCB.programCounter));
+                  _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));
                   this.isExecuting = false;
             }          
             
             } 
             //keep pcb updated
-            if(this.currentPCB !== null){
+            /*if(this.currentPCB !== null){
                this.updatePCB();
 
-            }
+            }*/
 
             //Need to create/upodate memory display
 

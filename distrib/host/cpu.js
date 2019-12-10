@@ -41,23 +41,24 @@ var TSOS;
         //Load program. Gets called in runProcess 
         Cpu.prototype.loadProgram = function (pcb) {
             this.currentPCB = pcb;
+            //this.currentPCB.state = "Running";
             this.loadFromPCB();
         };
         //Updates pcb to now run in cycle
         Cpu.prototype.loadFromPCB = function () {
             this.ProgramCounter = this.currentPCB.programCounter;
-            this.Acc = this.currentPCB.accumlator;
+            this.Acc = this.currentPCB.accumulator;
             this.partitionIndex = this.currentPCB.partitionIndex;
             this.Xreg = this.currentPCB.x;
             this.Yreg = this.currentPCB.y;
             this.Zflag = this.currentPCB.z;
         };
-        Cpu.prototype.updatePCB = function () {
-            if (this.currentPCB !== null) {
-                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
+        /*public updatePCB(): void{
+            if(this.currentPCB !== null){
+                this.currentPCB.updatePCB(this.ProgramCounter, this.acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
-        };
+        }*/
         Cpu.prototype.cycle = function () {
             console.log("cycle executing");
             console.log("current PCB: ", this.currentPCB);
@@ -73,11 +74,13 @@ var TSOS;
                 console.log("partition index: ", this.partitionIndex);
                 console.log("PC before A9: ", this.ProgramCounter);
                 console.log("Acc before run: ", this.Acc);
+                console.log("Acc search: ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16));
                 //Decide what to do with instruction
                 if (this.instruction == "A9") {
                     //load acc with a constant
                     this.ProgramCounter++;
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    //this.acc = 169;
                     this.ProgramCounter++;
                     console.log("A9 ran: ", this.currentPCB);
                     console.log("PC after A9: ", this.ProgramCounter);
@@ -124,14 +127,15 @@ var TSOS;
                     this.isExecuting = false;
                 }
                 else {
-                    _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.currentPCB.partitionIndex, this.currentPCB.programCounter));
+                    _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));
                     this.isExecuting = false;
                 }
             }
             //keep pcb updated
-            if (this.currentPCB !== null) {
-                this.updatePCB();
-            }
+            /*if(this.currentPCB !== null){
+               this.updatePCB();
+
+            }*/
             //Need to create/upodate memory display
         }; //end cycle
         return Cpu;

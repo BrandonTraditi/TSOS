@@ -46,12 +46,11 @@ var TSOS;
         };
         ProcessManager.prototype.runProcess = function (pcb) {
             if (this.runAll == false) {
-                pcb.state = "Running";
                 this.readyQueue.enqueue(pcb);
                 _CPU.loadProgram(pcb);
                 //Debugging
                 console.log("Run Process pcb: ", pcb);
-                console.log("Ready queue: ", this.readyQueue);
+                //console.log("Ready queue: ", this.readyQueue);
                 _CPU.isExecuting = true;
             }
             else {

@@ -6,7 +6,7 @@ var TSOS;
             this.state = "New";
             this.programCounter = 0;
             this.instructionReg = null;
-            this.accumlator = 0;
+            this.accumulator = 0;
             this.x = 0;
             this.y = 0;
             this.z = 0;
@@ -14,13 +14,6 @@ var TSOS;
             this.partitionIndex = 0;
             this.pid = p;
         }
-        PCB.prototype.updatePCB = function (pc, Acc, xReg, Yreg, Zflag) {
-            this.programCounter = pc;
-            this.accumlator = Acc;
-            this.x = xReg;
-            this.y = Yreg;
-            this.z = Zflag;
-        };
         return PCB;
     }());
     TSOS.PCB = PCB;
