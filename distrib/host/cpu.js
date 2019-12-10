@@ -16,9 +16,10 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = /** @class */ (function () {
-        function Cpu(ProgramCounter, Acc, Xreg, Yreg, Zflag, isExecuting, currentPCB, instruction) {
+        function Cpu(ProgramCounter, Acc, partitionIndex, Xreg, Yreg, Zflag, isExecuting, currentPCB, instruction) {
             if (ProgramCounter === void 0) { ProgramCounter = 0; }
             if (Acc === void 0) { Acc = 0; }
+            if (partitionIndex === void 0) { partitionIndex = -1; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
             if (Zflag === void 0) { Zflag = 0; }
@@ -27,6 +28,7 @@ var TSOS;
             if (instruction === void 0) { instruction = 'NA'; }
             this.ProgramCounter = ProgramCounter;
             this.Acc = Acc;
+            this.partitionIndex = partitionIndex;
             this.Xreg = Xreg;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
@@ -45,16 +47,17 @@ var TSOS;
         Cpu.prototype.loadFromPCB = function () {
             this.ProgramCounter = this.currentPCB.programCounter;
             this.Acc = this.currentPCB.accumlator;
+            this.partitionIndex = this.currentPCB.partitionIndex;
             this.Xreg = this.currentPCB.x;
             this.Yreg = this.currentPCB.y;
             this.Zflag = this.currentPCB.z;
         };
-        /*public updatePCB(): void{
-            if(this.currentPCB !== null){
-                this.currentPCB.updatePCB(this.ProgramCounter, this.Xreg, this.Yreg, this.Xreg, this.Zflag);
+        Cpu.prototype.updatePCB = function () {
+            if (this.currentPCB !== null) {
+                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
-        }*/
+        };
         Cpu.prototype.cycle = function () {
             console.log("cycle executing");
             console.log("current PCB: ", this.currentPCB);
@@ -63,16 +66,22 @@ var TSOS;
                 // TODO: Accumulate CPU usage and profiling statistics here.
                 // Do the real work here. Be sure to set this.isExecuting appropriately.
                 //get instruction
-                var currentInstruction = _Memory.readMemory(this.currentPCB.partitionIndex, this.ProgramCounter).toUpperCase();
+                var currentInstruction = _Memory.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
                 this.instruction = currentInstruction;
-                console.log("instruction:", this.instruction);
+                //Debugging
+                console.log("instruction: ", this.instruction);
+                console.log("partition index: ", this.partitionIndex);
+                console.log("PC before A9: ", this.ProgramCounter);
+                console.log("Acc before run: ", this.Acc);
                 //Decide what to do with instruction
                 if (this.instruction == "A9") {
                     //load acc with a constant
-                    this.currentPCB.programCounter++;
-                    this.currentPCB.accumlator = parseInt(_Memory.readMemory(this.currentPCB.partitionIndex, this.ProgramCounter), 16);
-                    this.currentPCB.programCounter++;
+                    this.ProgramCounter++;
+                    this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.ProgramCounter++;
                     console.log("A9 ran: ", this.currentPCB);
+                    console.log("PC after A9: ", this.ProgramCounter);
+                    console.log("Acc after run: ", this.Acc);
                 }
                 else if (this.instruction == "AD") {
                     //load acc from memory
@@ -115,16 +124,16 @@ var TSOS;
                     this.isExecuting = false;
                 }
                 else {
-                    _StdOut.putText("Not an applical instruction:" + _Memory.readMemory(this.currentPCB.partitionIndex, this.ProgramCounter));
+                    _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.currentPCB.partitionIndex, this.currentPCB.programCounter));
                     this.isExecuting = false;
                 }
             }
             //keep pcb updated
-            //if(this.currentPCB !== null){
-            // this.updatePCB();
-            //}
+            if (this.currentPCB !== null) {
+                this.updatePCB();
+            }
             //Need to create/upodate memory display
-        };
+        }; //end cycle
         return Cpu;
     }());
     TSOS.Cpu = Cpu;

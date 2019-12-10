@@ -36,10 +36,10 @@ module TSOS{
                 //set location
                 pcb.location = "MEMORY";
                 //used for debugging
-                console.log("pcb: ", pcb);
+               /* console.log("pcb: ", pcb);
                 console.log("program: ", program);
                 console.log("Wait queue ", this.waitQueue);
-                console.log("process array: ", this.processArray);
+                console.log("process array: ", this.processArray);*/
             }else{
                 _StdOut.putText("Program not loaded");
             }
@@ -52,6 +52,7 @@ module TSOS{
                 pcb.state = "Running";
                 this.readyQueue.enqueue(pcb);
                 _CPU.loadProgram(pcb);
+                //Debugging
                 console.log("Run Process pcb: ", pcb);
                 console.log("Ready queue: ", this.readyQueue);
                 _CPU.isExecuting = true;
