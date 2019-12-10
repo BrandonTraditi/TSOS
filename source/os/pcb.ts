@@ -17,12 +17,12 @@ module TSOS{
             this.pid = p;
         }
 
-       /* public updatePCB(pc: number, Acc: number, xReg: number, Yreg: number, Zflag: number): void{
+       public updatePCB(pc: number, Acc: number, xReg: number, Yreg: number, Zflag: number): void{
             this.programCounter = pc;
             this.accumulator = Acc;
             this.x = xReg;
             this.y = Yreg;
             this.z = Zflag;
-        }*/
+        }
     }
 }

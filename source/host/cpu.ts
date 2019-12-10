@@ -52,12 +52,12 @@ module TSOS {
             this.Zflag = this.currentPCB.z;
         }
 
-        /*public updatePCB(): void{
+        public updatePCB(): void{
             if(this.currentPCB !== null){
-                this.currentPCB.updatePCB(this.ProgramCounter, this.acc, this.Xreg, this.Yreg, this.Zflag);
+                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
-        }*/
+        }
 
         public cycle(): void {
             console.log("cycle executing");
@@ -73,27 +73,41 @@ module TSOS {
 
                 //Debugging
                 console.log("instruction: ",this.instruction);
-                console.log("partition index: ", this.partitionIndex);
+                //console.log("partition index: ", this.partitionIndex);
                 console.log("PC before A9: ", this.ProgramCounter);
                 console.log("Acc before run: ", this.Acc);
-                console.log("Acc search: ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16));
+                //console.log("Memory array: ", _Memory.memory);
+                _Memory.memory[173] = 5;
 
                 //Decide what to do with instruction
                 if(this.instruction == "A9"){
 
                     //load acc with a constant
-                    this.ProgramCounter++;
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
-                    //this.acc = 169;
                     this.ProgramCounter++;
-                    console.log("A9 ran: ", this.currentPCB);
+
+                    //debugging
+                    console.log("A9 ran: ", this.currentPCB); 
                     console.log("PC after A9: ", this.ProgramCounter); 
-                    console.log("Acc after run: ", this.Acc);              
+                    console.log("Acc after A9 run: ", this.Acc);              
 
                 }else if(this.instruction == "AD"){
                     //load acc from memory
+                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
+                    this.ProgramCounter++;
+
+                    //debugging
+                    console.log("AD ran: ", this.currentPCB); 
+                    console.log("PC after AD: ", this.ProgramCounter); 
+                    console.log("Hex variable: ", hex);
+                    console.log("Acc after AD run: ", this.Acc);  
+
+
                 }else if(this.instruction == "8D"){
                     //store acc in memory
+                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+
                 }else if(this.instruction == "6D"){
                     //add contents from address to acc 
                 }else if(this.instruction == "A2"){
@@ -124,10 +138,9 @@ module TSOS {
             
             } 
             //keep pcb updated
-            /*if(this.currentPCB !== null){
-               this.updatePCB();
+            this.updatePCB();
 
-            }*/
+            
 
             //Need to create/upodate memory display
 
