@@ -12,7 +12,7 @@ module TSOS{
             public runAll: boolean = false
         ){};
 
-        public currentPCB: TSOS.PCB;
+        //public currentPCB: TSOS.PCB;
 
         public createProcess(program: Array<string>): void{
             var partitionIndex = _MemoryManager.getAvailbepartitions();
@@ -36,8 +36,10 @@ module TSOS{
                 //set location
                 pcb.location = "MEMORY";
                 //used for debugging
-                console.log("pcb", pcb);
+                console.log("pcb: ", pcb);
                 console.log("program: ", program);
+                console.log("Wait queue ", this.waitQueue);
+                console.log("process array: ", this.processArray);
             }else{
                 _StdOut.putText("Program not loaded");
             }
@@ -49,13 +51,14 @@ module TSOS{
             if(this.runAll == false){
                 pcb.state = "Running";
                 this.readyQueue.enqueue(pcb);
-                console.log(pcb);
+                _CPU.loadProgram(pcb);
+                console.log("Run Process pcb: ", pcb);
+                console.log("Ready queue: ", this.readyQueue);
                 _CPU.isExecuting = true;
             }else{
                 pcb.state = "Ready";
                 this.readyQueue.enqueue(pcb);
             }
-            console.log("");
         }
 
 

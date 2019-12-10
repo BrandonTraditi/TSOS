@@ -14,6 +14,7 @@ var TSOS;
             this.runAll = runAll;
         }
         ;
+        //public currentPCB: TSOS.PCB;
         ProcessManager.prototype.createProcess = function (program) {
             var partitionIndex = _MemoryManager.getAvailbepartitions();
             if (partitionIndex != -1) {
@@ -34,8 +35,10 @@ var TSOS;
                 //set location
                 pcb.location = "MEMORY";
                 //used for debugging
-                console.log("pcb", pcb);
+                console.log("pcb: ", pcb);
                 console.log("program: ", program);
+                console.log("Wait queue ", this.waitQueue);
+                console.log("process array: ", this.processArray);
             }
             else {
                 _StdOut.putText("Program not loaded");
@@ -45,14 +48,15 @@ var TSOS;
             if (this.runAll == false) {
                 pcb.state = "Running";
                 this.readyQueue.enqueue(pcb);
-                console.log(pcb);
+                _CPU.loadProgram(pcb);
+                console.log("Run Process pcb: ", pcb);
+                console.log("Ready queue: ", this.readyQueue);
                 _CPU.isExecuting = true;
             }
             else {
                 pcb.state = "Ready";
                 this.readyQueue.enqueue(pcb);
             }
-            console.log("");
         };
         return ProcessManager;
     }());

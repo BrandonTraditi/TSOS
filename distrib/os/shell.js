@@ -71,7 +71,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates users code");
             this.commandList[this.commandList.length] = sc;
             //Run
-            sc = new TSOS.ShellCommand(this.shellRun, "run", "Runs a proccess");
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "- Runs a specific proccess");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -259,7 +259,7 @@ var TSOS;
                         _StdOut.putText("Validate and load user program");
                         break;
                     case "run":
-                        _StdOut.putText("Runs a process");
+                        _StdOut.putText("Runs a specific process");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -372,18 +372,23 @@ var TSOS;
                 var inQueue = false;
                 //Get pcb from wait queue
                 while (_ProcessManager.waitQueue.getSize() > 0) {
+                    //waitPCB is equal to the last section of the waitqueue
                     var waitPcb = _ProcessManager.waitQueue.dequeue();
+                    //if they match change in queue to true and put the pcb from wait queue into pcbRun
                     if (waitPcb.pid == pid) {
                         pcbRun = waitPcb;
                         inQueue = true;
+                        //if pid do not match save pcb in temp queue and check pid to next pcb
                     }
                     else {
                         tempQueue.enqueue(waitPcb);
                     }
                 }
+                //requeue pcb if put in tempqueue
                 while (tempQueue.getSize() > 0) {
                     _ProcessManager.waitQueue.enqueue(tempQueue.dequeue());
                 }
+                //if pcb is put in queue, run it
                 if (inQueue) {
                     _ProcessManager.runProcess(pcbRun);
                 }

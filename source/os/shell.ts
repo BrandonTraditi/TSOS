@@ -125,7 +125,7 @@ module TSOS {
             //Run
             sc = new ShellCommand(this.shellRun,
                                  "run",
-                                 "Runs a proccess");
+                                 "- Runs a specific proccess");
             this.commandList[this.commandList.length] = sc;
 
             
@@ -328,7 +328,7 @@ module TSOS {
                         _StdOut.putText("Validate and load user program");
                         break;
                     case "run":
-                        _StdOut.putText("Runs a process");
+                        _StdOut.putText("Runs a specific process");
                         break;
 
                     default:
@@ -449,17 +449,22 @@ module TSOS {
 
                 //Get pcb from wait queue
                 while(_ProcessManager.waitQueue.getSize() > 0){
+                    //waitPCB is equal to the last section of the waitqueue
                     var waitPcb = _ProcessManager.waitQueue.dequeue();
+                    //if they match change in queue to true and put the pcb from wait queue into pcbRun
                     if(waitPcb.pid == pid){
                         pcbRun = waitPcb;
                         inQueue = true;
+                    //if pid do not match save pcb in temp queue and check pid to next pcb
                     }else{
                         tempQueue.enqueue(waitPcb);
                     }
                 }
+                //requeue pcb if put in tempqueue
                 while(tempQueue.getSize() > 0){
                     _ProcessManager.waitQueue.enqueue(tempQueue.dequeue());
                 }
+                //if pcb is put in queue, run it
                 if(inQueue){
                     _ProcessManager.runProcess(pcbRun);
                 }else{
