@@ -72,12 +72,13 @@ module TSOS {
                 this.instruction = currentInstruction;
 
                 //Debugging
+                this.Acc = 10;
+                _Memory.memory[109]= "8D";
                 console.log("instruction: ",this.instruction);
                 //console.log("partition index: ", this.partitionIndex);
-                console.log("PC before A9: ", this.ProgramCounter);
+                console.log("PC before run: ", this.ProgramCounter);
                 console.log("Acc before run: ", this.Acc);
-                //console.log("Memory array: ", _Memory.memory);
-                _Memory.memory[173] = 5;
+                console.log("Memory array: ", _Memory.memory);
 
                 //Decide what to do with instruction
                 if(this.instruction == "A9"){
@@ -89,27 +90,42 @@ module TSOS {
                     //debugging
                     console.log("A9 ran: ", this.currentPCB); 
                     console.log("PC after A9: ", this.ProgramCounter); 
-                    console.log("Acc after A9 run: ", this.Acc);              
+                    console.log("Acc after A9 run: ", this.Acc); //A9 = 169            
 
                 }else if(this.instruction == "AD"){
                     //load acc from memory
-                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
                     this.ProgramCounter++;
 
                     //debugging
                     console.log("AD ran: ", this.currentPCB); 
                     console.log("PC after AD: ", this.ProgramCounter); 
-                    console.log("Hex variable: ", hex);
-                    console.log("Acc after AD run: ", this.Acc);  
+                    console.log("Hex variable: ", hex);//AD = 173
+                    console.log("Acc after AD run: ", this.Acc);//should return spot 173 in array to acc  
 
 
                 }else if(this.instruction == "8D"){
                     //store acc in memory
-                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    _Memory.writeByte(this.partitionIndex, hexDec, this.Acc.toString(16));
+                    this.ProgramCounter++;
+
+                    console.log("Hex value: ", hexDec);//8D = 141
+                    console.log("Memory array: ", _Memory.memory);//should have 8d in spot 141 on array
+                    console.log("Byte data: ", this.Acc.toString(16));
 
                 }else if(this.instruction == "6D"){
                     //add contents from address to acc 
+                    let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.Acc += parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
+                    this.ProgramCounter++
+
+                    console.log("Hex decimal: ", hexDec); //6D = 109
+                    console.log("Memory array: ", _Memory.memory);
+                    console.log("Acc after: ", this.Acc);
+
+
                 }else if(this.instruction == "A2"){
                     // load x reg with constant
                 }else if(this.instruction == "AE"){

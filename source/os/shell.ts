@@ -419,7 +419,7 @@ module TSOS {
                 for(var i = 0; i < userInput.length; i++){
                     var currChar = userInput.charAt(i);
                     for(var j = 0; j < validHex.length; j++){
-                        if(currChar == validHex[j]){
+                        if(currChar.toUpperCase() == validHex[j]){
                             counter++;
                         }
                     }
