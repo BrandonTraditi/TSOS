@@ -70,12 +70,14 @@ var TSOS;
                 var currentInstruction = _Memory.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
                 this.instruction = currentInstruction;
                 //Debugging
-                this.Acc = 10;
-                _Memory.memory[109] = "8D";
+                //this.Acc = 10;
+                //_Memory.memory[238]= "A9";
+                //this.ProgramCounter = 50;
                 console.log("instruction: ", this.instruction);
+                //console.log("ZFlag: ", this.Zflag);
                 //console.log("partition index: ", this.partitionIndex);
-                console.log("PC before run: ", this.ProgramCounter);
-                console.log("Acc before run: ", this.Acc);
+                //console.log("PC before run: ", this.ProgramCounter);
+                //console.log("Acc before run: ", this.Acc);
                 console.log("Memory array: ", _Memory.memory);
                 //Decide what to do with instruction
                 if (this.instruction == "A9") {
@@ -118,30 +120,86 @@ var TSOS;
                 }
                 else if (this.instruction == "A2") {
                     // load x reg with constant
+                    this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.ProgramCounter++;
+                    console.log("Xreg value: ", this.Xreg); //A2 = 162 
                 }
                 else if (this.instruction == "AE") {
                     //load x reg from memory
+                    var xMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, xMem), 16);
+                    this.ProgramCounter++;
+                    console.log("xMem: ", xMem); //AE = 174
+                    console.log("Xreg value: ", this.Xreg);
                 }
                 else if (this.instruction == "A0") {
                     //load y reg with constant
+                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.ProgramCounter++;
+                    console.log("Yreg value: ", this.Yreg); //A0 = 160
                 }
                 else if (this.instruction == "AC") {
                     //load y reg from memory
+                    var yMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, yMem), 16);
+                    this.ProgramCounter++;
+                    console.log("yMem: ", yMem); //AC = 172
+                    console.log("Yreg value: ", this.Yreg);
                 }
                 else if (this.instruction == "EC") {
                     //compare byte at address to x reg, set z flag
+                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    var byte = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
+                    //comparison
+                    if (byte === this.Xreg) {
+                        this.Zflag = 1;
+                    }
+                    else {
+                        this.Zflag = 0;
+                    }
+                    this.ProgramCounter++;
+                    console.log("hex: ", hex); //EC = 236
+                    console.log("byte: ", byte);
+                    console.log("xReg: ", this.Xreg);
+                    console.log("zFlag: ", this.Zflag);
                 }
                 else if (this.instruction == "D0") {
-                    //Branch N bytesif z flag = 0
+                    //Branch N bytes if z flag = 0
+                    if (this.Zflag === 0) {
+                        var branchN = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                        var branchPC = this.ProgramCounter + branchN;
+                        if (branchPC > _MemoryPartitionSize - 1) {
+                            this.ProgramCounter = branchPC - _MemoryPartitionSize;
+                        }
+                        else {
+                            this.ProgramCounter = branchPC;
+                        }
+                    }
+                    else {
+                        this.ProgramCounter++;
+                    }
+                    console.log("BranchN: ", branchN); //D0 = 208
+                    console.log("BranchPC: ", branchPC);
+                    console.log("Program Counter: ", this.ProgramCounter);
                 }
                 else if (this.instruction == "EE") {
                     //increment byte
+                    var hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    var hexLoc = parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
+                    hexLoc = 170;
+                    _Memory.writeByte(this.partitionIndex, hexDec, hexLoc.toString(16));
+                    this.ProgramCounter++;
+                    console.log("HexDec: ", hexDec); //EE = 238
+                    console.log("HexLoc: ", hexLoc);
+                    console.log("Memory spot: ", _Memory.readMemory(this.partitionIndex, hexDec));
+                    console.log(_Memory.memory);
                 }
                 else if (this.instruction == "FF") {
                     //system call
                 }
                 else if (this.instruction == "EA") {
                     //no op
+                    this.ProgramCounter++;
                 }
                 else if (this.instruction == "00") {
                     //break program
