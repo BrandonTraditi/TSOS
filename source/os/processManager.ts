@@ -12,7 +12,7 @@ module TSOS{
             public runAll: boolean = false
         ){};
 
-        public currentPCB: TSOS.PCB;
+        //public currentPCB: TSOS.PCB;
 
         public createProcess(program: Array<string>): void{
             var partitionIndex = _MemoryManager.getAvailbepartitions();
