@@ -250,7 +250,7 @@ module TSOS {
                            y++;
                            opCode = parseInt(_Memory.readMemory(this.partitionIndex, y), 16);
                        }
-                       //console.log("Output: ", output);
+                        console.log("Output: ", output);
                        _StdOut.putText("Your output: ", output);
                        _Console.advanceLine();
                        this.ProgramCounter++;
@@ -268,6 +268,7 @@ module TSOS {
                   //break program
                   this.ProgramCounter++;
                   this.isExecuting = false;
+                  _StdOut.putText("Your output: ", output.toString());
 
                 }else{
                   _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));
