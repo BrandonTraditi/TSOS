@@ -60,8 +60,10 @@ module TSOS {
         }
 
         public cycle(): void {
+            //console.log("Process about to run: ", this.currentPCB);
             console.log("cycle executing");
-            //console.log("current PCB: ", this.currentPCB);
+            //console.log("current PCB: ", this.currentPCB); 
+            
             if(this.currentPCB !== null && this.isExecuting == true){
                _Kernel.krnTrace('CPU cycle');
                // TODO: Accumulate CPU usage and profiling statistics here.
@@ -70,7 +72,6 @@ module TSOS {
                 //get instruction
                 var currentInstruction = _Memory.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
                 this.instruction = currentInstruction;
-
                 //Debugging
                 //this.Acc = 10;
                 //_Memory.memory[174]= "A9";
@@ -89,12 +90,16 @@ module TSOS {
                 if(this.instruction == "A9"){
 
                     //load acc with a constant
-                    this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let nextHex = this.ProgramCounter + 1;
+                    //console.log("next hex: ", nextHex);
+                    //console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
+                    this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
+                    //console.log("Acc: ", this.Acc);
                     this.ProgramCounter+= 2;
 
                     //debugging 
-                   // console.log("A9 ran: ", this.currentPCB); 
-                   // console.log("PC after A9: ", this.ProgramCounter); 
+                    //console.log("A9 ran: ", this.currentPCB); 
+                    //console.log("PC after A9: ", this.ProgramCounter); 
                     //console.log("Acc after A9 run: ", this.Acc); //A9 = 169            
 
                 }else if(this.instruction == "AD"){
@@ -133,10 +138,14 @@ module TSOS {
 
                 }else if(this.instruction == "A2"){
                     // load x reg with constant
-                    this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    console.log("this.ProgramCounter: ", this.ProgramCounter);
+                    var nextHex = this.ProgramCounter + 1;
+                    console.log("next hex: ", nextHex);
+                    console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
+                    this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
                     this.ProgramCounter+= 2;
 
-                    //console.log("Xreg value: ", this.Xreg);//A2 = 162 
+                    console.log("Xreg value: ", this.Xreg);//A2 = 162 
 
                 }else if(this.instruction == "AE"){
                     //load x reg from memory
@@ -167,9 +176,10 @@ module TSOS {
                   //compare byte at address to x reg, set z flag
                   let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
                   let byte = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
+                  console.log("byte: ", byte);
 
                   //comparison
-                  if(byte === this.Xreg){
+                  if(byte == this.Xreg){
                       this.Zflag = 1;
                   }else{
                       this.Zflag = 0;
@@ -183,13 +193,14 @@ module TSOS {
 
                 }else if(this.instruction == "D0"){
                     //Branch N bytes if z flag = 0
-                    //var nextHec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    console.log("Branch index ", _Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1));
                     if(this.Zflag === 0){
                         var branchN = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                         var branchPC = this.ProgramCounter + branchN;
                         
                         if(branchPC > _MemoryPartitionSize - 1){
                             this.ProgramCounter = branchPC - _MemoryPartitionSize;
+                            this.ProgramCounter += 2;
                         }else{
                             this.ProgramCounter = branchPC;
                             this.ProgramCounter+=2;
@@ -268,8 +279,8 @@ module TSOS {
 
             
 
-            //Need to create/upodate memory display
-
+            //Need to create/upodate memory display   
         }//end cycle
+        
     }
 }
