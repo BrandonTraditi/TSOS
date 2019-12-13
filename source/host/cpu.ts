@@ -104,7 +104,7 @@ module TSOS {
 
                 }else if(this.instruction == "AD"){
                     //load acc from memory
-                    let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
                     this.ProgramCounter+= 3;
 
@@ -117,7 +117,7 @@ module TSOS {
 
                 }else if(this.instruction == "8D"){
                     //store acc in memory
-                    let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     _Memory.writeByte(this.partitionIndex, hexDec, this.Acc.toString(16));
                     this.ProgramCounter+= 3;
 
@@ -127,7 +127,7 @@ module TSOS {
 
                 }else if(this.instruction == "6D"){
                     //add contents from address to acc 
-                    let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.Acc += parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
                     this.ProgramCounter+= 3;
 
@@ -138,10 +138,10 @@ module TSOS {
 
                 }else if(this.instruction == "A2"){
                     // load x reg with constant
-                    console.log("this.ProgramCounter: ", this.ProgramCounter);
+                    //console.log("this.ProgramCounter: ", this.ProgramCounter);
                     var nextHex = this.ProgramCounter + 1;
-                    console.log("next hex: ", nextHex);
-                    console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
+                    //console.log("next hex: ", nextHex);
+                    //console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
                     this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
                     this.ProgramCounter+= 2;
 
@@ -149,7 +149,7 @@ module TSOS {
 
                 }else if(this.instruction == "AE"){
                     //load x reg from memory
-                    let xMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    let xMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, xMem), 16);
                     this.ProgramCounter+=3;
 
@@ -158,14 +158,14 @@ module TSOS {
 
                 }else if(this.instruction == "A0"){
                     //load y reg with constant
-                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.ProgramCounter+= 2;
 
                     //console.log("Yreg value: ", this.Yreg);//A0 = 160
 
                 }else if(this.instruction == "AC"){
                    //load y reg from memory
-                   let yMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                   let yMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter+ 1), 16);
                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, yMem), 16);
                    this.ProgramCounter+= 3;
 
@@ -174,9 +174,12 @@ module TSOS {
 
                 }else if(this.instruction == "EC"){
                   //compare byte at address to x reg, set z flag
-                  let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                  console.log("HexIndex: ", _Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1));
+                  let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                   let byte = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
+                  console.log("Hex: ", hex);
                   console.log("byte: ", byte);
+                  console.log("xReg", this.Xreg);
 
                   //comparison
                   if(byte == this.Xreg){
@@ -193,7 +196,7 @@ module TSOS {
 
                 }else if(this.instruction == "D0"){
                     //Branch N bytes if z flag = 0
-                    console.log("Branch index ", _Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1));
+                    console.log("Branch index ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16));
                     if(this.Zflag === 0){
                         var branchN = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                         var branchPC = this.ProgramCounter + branchN;
@@ -217,7 +220,7 @@ module TSOS {
 
                 }else if(this.instruction == "EE"){
                    //increment byte
-                   let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter), 16);
+                   let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                    let hexLoc = parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
                    hexLoc ++;
                    _Memory.writeByte(this.partitionIndex, hexDec, hexLoc.toString(16));
