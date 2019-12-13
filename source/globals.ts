@@ -72,6 +72,7 @@ var _PID: number = -1;
 var _Memory: TSOS.Memory;
 var _MemorySize = 768;
 var _MemoryPartitionSize = 256;
+var OutputArray: any[] = ["Your output: "];
 
 var onDocumentLoad = function() {
 	TSOS.Control.hostInit();

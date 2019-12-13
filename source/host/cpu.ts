@@ -62,6 +62,7 @@ module TSOS {
         public cycle(): void {
             //console.log("Process about to run: ", this.currentPCB);
             console.log("cycle executing");
+            console.log(OutputArray);
             //console.log("current PCB: ", this.currentPCB); 
             
             if(this.currentPCB !== null && this.isExecuting == true){
@@ -72,9 +73,13 @@ module TSOS {
                 //get instruction
                 var currentInstruction = _Memory.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
                 this.instruction = currentInstruction;
+
+                //OutputArray = ["Your output: "];
                 //Debugging
                 //this.Acc = 10;
                 //_Memory.memory[174]= "A9";
+                //this.Yreg = 169;
+                //this.Xreg = 1;
                 //this.ProgramCounter = 50;
                 //this.Xreg = 2;
                 //this.Yreg = 2;
@@ -233,15 +238,17 @@ module TSOS {
 
                 }else if(this.instruction == "FF"){
                    //system call
-                   //console.log("Xreg value: ", this.Xreg);
-                   //console.log("Y reg value: ", this.Yreg);
+                   console.log("Xreg value: ", this.Xreg);
+                   console.log("Y reg value: ", this.Yreg);
+                   console.log("Y to string: ", this.Yreg.toString());
                    if(this.Xreg === 1){
                        _StdOut.putText(this.Yreg.toString());
-                       _Console.advanceLine();
+                       //_Console.advanceLine();
+                       OutputArray.push(this.Yreg.toString());
                        this.ProgramCounter++;
                    }else if(this.Xreg === 2){
                        var y = this.Yreg;
-                       var output = " ";
+                       var output = "";
                        var opCode = parseInt(_Memory.readMemory(this.partitionIndex, this.Yreg), 16);
                        //console.log("Op code value: ", opCode);
 
@@ -251,8 +258,9 @@ module TSOS {
                            opCode = parseInt(_Memory.readMemory(this.partitionIndex, y), 16);
                        }
                         console.log("Output: ", output);
-                       _StdOut.putText("Your output: ", output);
-                       _Console.advanceLine();
+                       _StdOut.putText(output);
+                       //_Console.advanceLine();
+                       OutputArray.push(output);
                        this.ProgramCounter++;
                    }else{
 
@@ -260,6 +268,12 @@ module TSOS {
 
                    }
 
+
+                   console.log("output array: ", OutputArray);
+                   
+                   _Console.advanceLine();
+                   
+                
                 }else if(this.instruction == "EA"){
                   //no op
                   this.ProgramCounter++;
@@ -268,7 +282,10 @@ module TSOS {
                   //break program
                   this.ProgramCounter++;
                   this.isExecuting = false;
-                  _StdOut.putText("Your output: ", output.toString());
+                  var out = OutputArray.join("");
+                  _StdOut.putText(out);
+                  _Console.advanceLine();
+                  _OsShell.putPrompt();
 
                 }else{
                   _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));

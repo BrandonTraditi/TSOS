@@ -355,13 +355,16 @@ var TSOS;
             //split array of Hex into individual codes
             var program = userInput.split(" ");
             //Check if code is valid Hex
-            if (counter == userInput.length) {
-                //Alert it is valid and create a new process 
-                _StdOut.putText("This is valid hex");
+            if (counter == userInput.length && _PID < 2) {
+                //Alert it is valid and create a new process                 
                 _ProcessManager.createProcess(program);
+                _StdOut.putText("This is valid hex. Loaded with PID: " + _PID);
+            }
+            else if (counter == userInput.length && _PID == 2) {
+                _StdOut.putText("Sorry all memory slots are full. ");
             }
             else {
-                _StdOut.putText("This is not valid hex");
+                _StdOut.putText("This is not a valid program");
             }
         };
         Shell.prototype.shellRun = function (args) {
