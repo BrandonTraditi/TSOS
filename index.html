@@ -2,7 +2,7 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-   <meta name="author"             content="Alan G. Labouseur" />
+   <meta name="Brandon Traditi"             content="Alan G. Labouseur" />
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
    <title>
       TSOS - a browser-based virtual Operating System in TypeScript
@@ -38,92 +38,177 @@
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment the line below to enable GLaDOS testing. -->
-   <!-- <script type="text/javascript" src="./test/glados-ip3.js"></script>-->
+   <!-- <script type="text/javascript" src="./test/glados-ip1.js"></script> -->
    
 </head>
 
 <body onload="onDocumentLoad()">
 
-<div id="divMain" style="width:100%;">
+      <div id="divMain" style="width:100%;">
 
-   <div id="divButtonBar" style="margin:4px;">
-      <input type="button"
-             id = "btnStartOS"
-             name="brnStartOS"
-             class="normal_button"
-             value="Start"
-             tabindex="0"
-             onclick="TSOS.Control.hostBtnStartOS_click(this);">
+            <div id="divButtonBar" style="margin:4px;">
+                  <input type="button"
+                         id = "btnStartOS"
+                         name="brnStartOS"
+                         class="normal_button"
+                         value="Start"
+                         tabindex="0"
+                         onclick="TSOS.Control.hostBtnStartOS_click(this);">
+            
+                  <input type="button"
+                         id = "btnHaltOS"
+                         name="brnHaltOS"
+                         class="normal_button"
+                         disabled="disabled"
+                         value="Halt"
+                         tabindex="1"
+                         onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+            
+                  <input type="button"
+                         id = "btnReset"
+                         name="brnReset"
+                         class="normal_button"
+                         disabled="disabled"
+                         value="Reset"
+                         tabindex="2"
+                         onclick="TSOS.Control.hostBtnReset_click(this);">
+               </div>
 
-      <input type="button"
-             id = "btnHaltOS"
-             name="brnHaltOS"
-             class="normal_button"
-             disabled="disabled"
-             value="Halt"
-             tabindex="1"
-             onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+               <br>
+            
+               <div id="statusBar"> Status: <label id="statusDisplay"> </label></div>
 
-      <input type="button"
-             id = "btnReset"
-             name="brnReset"
-             class="normal_button"
-             disabled="disabled"
-             value="Reset"
-             tabindex="2"
-             onclick="TSOS.Control.hostBtnReset_click(this);">
-   </div>
+               <br>
+            
+               <div id="timeBar">Time: <label id="timeDisplay"> </label></div>
 
-   <div id="statusBar">
-      <p> status; </p>
-      <label id="statusDisplay"> </label>
-   </div>
+               <br>
+            
 
-   <div id="timeBar">
-      <p> time; </p>
-      <label id="timeDisplay"> </label>
-   </div>
+            <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
+               <canvas id="display"
+                       width="500px"
+                       height="500px"
+                       tabindex="3">
+               </canvas>
+            </div>
 
-   <div id="divConsole" style="margin:4px; max-width:500px; max-height:500px; float:left;">
-      <canvas id="display"
-              width="500px"
-              height="500px"
-              tabindex="3">
-      </canvas>
-   </div>
+            <div id="divLog" style="margin-left:520px;">
+                  <label style="color:white">
+                     Host Log
+                     <br>
+                     <textarea name="taHostLog"
+                               id  ="taHostLog"
+                               rows="15"
+                               cols="48"
+                     ></textarea>
+                  </label>
+               </div>
 
-   <div id="divLog" style="margin-left:520px;">
-      <label>
-         Host Log
-         <br>
-         <textarea name="taHostLog"
-                   id  ="taHostLog"
-                   rows="26"
-                   cols="48"
-         ></textarea>
-      </label>
-   </div>
 
-   <div id="divUserProgramInput" style="margin-left:520px;">
-      <label>
-         User Program Input
-         <br>
-         <textarea name="taProgramInput"
-                   id  ="taProgramInput"
-                   rows="8"
-                   cols="48"
-         ></textarea>       
-      </label>
-   </div>
-</div>
+            <div id="cpu" class = "cpuDisplay" style="margin-left: 520px;">
+               <label id = "cpuLabel"> CPU Display </label>
+               <table id = "cpuTable" cellpadding="10">
+               <tr>
+                 <th>PC</th>
+                 <th>AC</th>
+                 <th>IR</th>
+                 <th>X</th>
+                 <th>Y</th>
+                 <th>Z</th>
+               </tr>
+               <tbody id = "cpuTable">
+                 <tr>
+                   <td>0</td>
+                   <td>0</td>
+                   <td>00</td>
+                   <td>0</td>
+                   <td>0</td>
+                   <td>0</td>
+                 </tr>
+               </tbody>
+               </table>
+            </div>
+         
+            <br>
 
-<p class="footerText" style="clear:both;">
-   <br>
-   Copyright &copy; 2008 - 2016 No Rights Reserved.
-   <br>
-   Reproduction is inhibited without the express written consent of
-   Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
-</p>
+            <div id="pcb" style="margin-left: 520px;">
+                  <label id = "pcbLabel"> Processes </label>
+                  <table id = "pcbTable" cellpadding="15">    
+                      <tbody id = "body">
+                        <tr>
+                          <th> PID </th>
+                          <th> State </th>
+                          <th> PC </th>
+                          <th> AC </th>
+                          <th> IR </th>
+                          <th>Location</th>
+                          <th> X </th>
+                          <th> Y </th>
+                          <th> Z </th>
+                        </tr>
+                        <tr>
+                           <td> 0 </td>
+                           <td> -- </td>
+                           <td> 0 </td>
+                           <td> 0</td>
+                           <td> -- </td>
+                           <td> -- </td>
+                           <td> 0 </td>
+                           <td> 0 </td>
+                           <td> 0 </td>
 
-</body>
-</html>
+
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+         
+               <br><br><br><br><br><br><br><br>
+            <div id= "memory">
+             <label id ="memoryLabel"> Process Memory </label>
+             <table id = "memoryTable" cellpadding = "16">
+             
+               <tbody id = "body">
+                 <tr>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                   <td> 0 </td>
+                 </tr>
+               </tbody>
+             </table>
+            </div>
+            
+            <div id="divUserProgramInput" style="margin-left:520px;">
+                  <label style="color:black">
+                     User Program Input
+                     <br>
+                     <textarea name="taProgramInput"
+                               id  ="taProgramInput"
+                               rows="8"
+                               cols="48"
+                     ></textarea>
+                  </label>
+               </div>
+            </div>
+
+
+         
+         <br><br><br><br>
+         <p class="footerText" style="clear:both;">
+            <br>
+            Copyright &copy; 2008 - 2016 No Rights Reserved.
+            <br>
+            Reproduction is inhibited without the express written consent of
+            Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
+         </p>
+         
+         </body>
+         </html>

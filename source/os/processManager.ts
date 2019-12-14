@@ -41,7 +41,7 @@ module TSOS{
                 console.log("Wait queue ", this.waitQueue);
                 console.log("process array: ", this.processArray);*/
             }else{
-                _StdOut.putText("Program not loaded");
+                _StdOut.putText("Program not loaded.");
             }
 
 

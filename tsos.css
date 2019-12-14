@@ -1,7 +1,7 @@
 /* TSOS.css */
 
 body {
-  background: #909193 url(distrib/images/linen.png) repeat;
+  background: #909193;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
@@ -9,15 +9,62 @@ body {
 }
 
 h1 {
-  color: black;
+  color: white;
   font-size: 24pt;
   font-weight: normal;
   font-style: normal;
   border-bottom: 1px solid black;
 }
 
-h2 {
+table, th, td{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#cpuTable{
   color: black;
+  background-color:white;
+}
+
+#cpuLabel {
+  background-color:white;
+  color : black;
+  padding: 1px;
+  border: 1px solid;
+}
+
+#memoryLabel{
+  background-color: white;
+  color: black;
+  padding: 1px;
+  border: 1px solid;
+}
+
+#memoryTable{
+  position: absolute;
+  color: black;
+  background-color: white;
+  height:200px;
+  width: 500px;
+  overflow-y:scroll;
+  display: block;  
+}
+
+#pcbLabel{
+  background-color: white;
+  color :black;
+  padding: 2px;
+  border: 2px solid;
+}
+
+#pcbTable{
+  position: absolute;
+  color:black;
+  background-color: white;
+}
+
+h2 {
+  color: white;
   font-size: 20pt;
   font-weight: normal;
   font-style: normal;
@@ -32,7 +79,7 @@ h3 {
 
 #display {
   background-color:#DFDBC3;
-  border: 2px solid red;
+  border: 2px solid black;
   cursor: default;
 }
 
@@ -41,7 +88,7 @@ h3 {
 }
 
 .footerText {
-  color: black;
+  color: white;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 8pt;
   text-align: center;
