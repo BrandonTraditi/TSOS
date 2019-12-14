@@ -20,6 +20,8 @@ const TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (inte
                               // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 const KEYBOARD_IRQ: number = 1;
 
+const LOAD_PROCCESS_IRQ: number = 2;
+
 
 //
 // Global Variables
@@ -73,6 +75,11 @@ var _Memory: TSOS.Memory;
 var _MemorySize = 768;
 var _MemoryPartitionSize = 256;
 var OutputArray: any[] = ["Your output: "];
+
+var _Control: TSOS.Control;
+var _DefaultQuantum: number = 6;
+var _SchedAlgo: string = "rr";
+var _CpuScheduler: TSOS.cpuScheduler
 
 var onDocumentLoad = function() {
 	TSOS.Control.hostInit();
