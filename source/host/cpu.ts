@@ -35,17 +35,24 @@ module TSOS {
         public init(){
         }
 
+
         //Load in the pcb and set to current pcb
         public loadProgram(pcb: TSOS.PCB): void{
             console.log("Load program pcb: ", pcb);
             console.log("is Executing?", this.isExecuting);
+            console.log("Ready Queue: ", _ProcessManager.readyQueue);
             this.currentPCB = pcb;
             this.isExecuting = true;
+            /*this.ProgramCounter = this.currentPCB.programCounter;
+            this.Acc = this.currentPCB.accumulator;
+            this.Xreg = this.currentPCB.x;
+            this.Yreg = this.currentPCB.x;
+            this.Zflag = this.currentPCB.z;*/
         }
 
         public updatePCB(): void{
             if(this.currentPCB !== null){
-                this.currentPCB.updatePCB(this.ProgramCounter, this.instruction, this.Acc, this.Xreg, this.Yreg, this.Zflag);
+                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
         }
@@ -140,7 +147,7 @@ module TSOS {
                     this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
                     this.ProgramCounter+= 2;
 
-                    console.log("Xreg value: ", this.Xreg);//A2 = 162 
+                    //console.log("Xreg value: ", this.Xreg);//A2 = 162 
 
                 }else if(this.instruction == "AE"){
                     //load x reg from memory
@@ -285,6 +292,7 @@ module TSOS {
             } 
             //keep pcb updated
             this.updatePCB();
+
             _RoundRobinCounter++;
             if(_RoundRobinCounter > _DefaultQuantum){
                 this.isExecuting = false;

@@ -6,7 +6,6 @@ module TSOS{
     export class cpuScheduler{
         constructor(
         public quantum: number = _DefaultQuantum,
-        public counter: number = 0,
         public algorithm: string = _SchedAlgo,
         public nextPCB: TSOS.PCB = null,
         ){};
@@ -14,19 +13,19 @@ module TSOS{
         public roundRobin(){
             var pcb: PCB = _CPU.currentPCB;
             console.log("RR PCB: ", pcb);
-            var tempQueue: TSOS.Queue = new Queue();
+            this.nextPCB = _ProcessManager.readyQueue.dequeue();
+            console.log("Dequeue ready queue: ", _ProcessManager.readyQueue);
+            //var tempQueue: TSOS.Queue = new Queue();
+            //tempQueue.enqueue(pcb);
+            //console.log("Temp Queue: ", tempQueue);
             if(_ProcessManager.readyQueue.getSize() > 0){
-                this.nextPCB = _ProcessManager.readyQueue.dequeue();
                 this.nextPCB.state = "Running";
-                
+                _RoundRobinCounter = 0;
+                _CPU.loadProgram(this.nextPCB);
+                _ProcessManager.readyQueue.unShift(pcb);
             }
 
             _CPU.isExecuting = true;
-           // if(_ProcessManager.readyQueue.getSize() > 0){
-               // this.nextPCB = _ProcessManager.readyQueue.dequeue();
-                //this.nextPCB.state = "Running";
-               // _CPU.loadProgram(this.nextPCB);
-            //}
         }
 
     }
