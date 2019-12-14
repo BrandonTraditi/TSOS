@@ -50,9 +50,10 @@ var TSOS;
             for (var i = 0; i < program.length; i++) {
                 this.writeByte(partition, i, program[i]);
             }
+            //Control.memoryUpdate();
         };
         //clears all memory
-        Memory.prototype.clearMemory = function (parition) {
+        Memory.prototype.clearMemory = function () {
             for (var i = 0; i < this.memory.length; i++) {
                 this.memory[i] = "00";
             }

@@ -128,5 +128,23 @@ module TSOS {
             // page from its cache, which is not what we want.
         }
 
+      /*public static memoryUpdate(){
+            var array = _Memory.memory;
+            var table = (<HTMLTableElement>document.getElementById("memory"));
+
+            for(var i = 0; i < _Memory.memory.length; i++)
+            {
+                // create a new row
+                var newRow = table.insertRow(array.length);
+                for(var j = 0; j < _Memory.memory[i].length; j++)
+                {
+                    // create a new cell
+                    var cell = newRow.insertCell(j);
+                    
+                    // add value to the cell
+                    cell.innerHTML = _Memory.memory[i][j];
+                }
+            }
+        }*/
     }
 }

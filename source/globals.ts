@@ -80,7 +80,9 @@ var OutputArray: any[] = ["Your output: "];
 var _Control: TSOS.Control;
 var _DefaultQuantum: number = 6;
 var _SchedAlgo: string = "rr";
-//var _CpuScheduler: TSOS.cpuScheduler;
+var _Loaded: boolean = true;
+var _CpuScheduler: TSOS.cpuScheduler;
+var _RoundRobinCounter: number = 0;
 
 var onDocumentLoad = function() {
 	TSOS.Control.hostInit();

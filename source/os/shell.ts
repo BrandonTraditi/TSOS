@@ -131,31 +131,31 @@ module TSOS {
                         
             //clear memory
             sc = new ShellCommand(this.shellClearMem,
-                                 "ClearMem",
+                                 "clearmem",
                                 "- Clears all memory");
             this.commandList[this.commandList.length] = sc;
             
             //PS
             sc = new ShellCommand(this.shellPS,
-                                "Ps",
+                                "ps",
                                 "- Displays all PID");
             this.commandList[this.commandList.length] = sc;
 
             //kill
             sc = new ShellCommand(this.shellKill,
-                                 "killPid",
+                                 "killpid",
                                 "- Kills a certain PID");
             this.commandList[this.commandList.length] = sc;
 
             //Kill all
             sc = new ShellCommand(this.shellKillAll,
-                                 "killAll",
+                                 "killall",
                                  "- Kills all PIDS");
             this.commandList[this.commandList.length] = sc;
 
             //Quantum
             sc = new ShellCommand(this.shellQuantum,
-                                 "Quantum,",
+                                 "quantum",
                                  "- Select a quantum for RR");
             this.commandList[this.commandList.length] = sc;
 
@@ -359,7 +359,7 @@ module TSOS {
                     case "runall":
                         _StdOut.putText("Runs all Proccess'")
                         break;
-                    case "clearMem":
+                    case "clearmem":
                         _StdOut.putText("Clears all memory");
                         break;
                     case "ps":
@@ -368,7 +368,7 @@ module TSOS {
                     case "kill":
                         _StdOut.putText("Kill a certain PID");
                         break;
-                    case "killAll":
+                    case "killall":
                         _StdOut.putText("Kills all process'");
                         break;
                     case "quantum":
@@ -474,14 +474,15 @@ module TSOS {
             
 
             //Check if code is valid Hex
-            if(counter == userInput.length && _PID < 2){
+            if(counter == userInput.length){
                 //Alert it is valid and create a new process                 
                 _ProcessManager.createProcess(program);
-                _StdOut.putText("This is valid hex. Loaded with PID: " + _PID);
-            }else if(counter == userInput.length &&_PID == 2){
-                _StdOut.putText("Sorry all memory slots are full. ")
+                if(_Loaded = true){
+                    _StdOut.putText("This is valid hex. Loaded with PID: " + _PID);
+                }
+                    
             }else{
-                _StdOut.putText("This is not a valid program");
+                _StdOut.putText("Program not loaded.");
             }
 
         }
@@ -531,8 +532,24 @@ module TSOS {
         }
 
         
-        public shellClearMem() {
+        public shellClearMem(args) {
+            let clear = args.toString();
+            console.log(_Memory.memory);
 
+            if(clear === "0"){
+                _Memory.clearMemoryPartition(0);
+                _StdOut.putText("Memory partition 0 cleared. ");                
+            }else if(clear === "1"){
+                _Memory.clearMemoryPartition(1);
+                _StdOut.putText("Memory partition 1 cleared. ");
+            }else if(clear === "2"){
+                _Memory.clearMemoryPartition(2);
+                _StdOut.putText("Memory partition 2 cleared. ");
+            }else{
+                _Memory.clearMemory();
+                _StdOut.putText("All Memory partitions cleared. ");
+            }
+            console.log(_Memory.memory);
         }
 
         public shellPS() {
@@ -548,6 +565,12 @@ module TSOS {
         }
 
         public shellQuantum(args){
+            if(args.length > 0){
+                _DefaultQuantum = args[0];
+                _StdOut.putText("Quantum is set to  " + _DefaultQuantum);
+            }else{
+                _StdOut.put("Please enter a valid number");
+            }
 
         }
 

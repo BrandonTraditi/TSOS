@@ -47,5 +47,6 @@ module TSOS {
             document.getElementById("statusDisplay").innerHTML = s;
 
         }
+
     }
 }

@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="../os/cpuScheduler.ts" />
 /* ------------
      CPU.ts
 
@@ -44,7 +45,6 @@ var TSOS;
             console.log("is Executing?", this.isExecuting);
             this.currentPCB = pcb;
             this.isExecuting = true;
-            this.cycle();
         };
         Cpu.prototype.updatePCB = function () {
             if (this.currentPCB !== null) {
@@ -261,6 +261,13 @@ var TSOS;
             }
             //keep pcb updated
             this.updatePCB();
+            _RoundRobinCounter++;
+            if (_RoundRobinCounter > _DefaultQuantum) {
+                this.isExecuting = false;
+                _CpuScheduler.roundRobin(this.currentPCB);
+            }
+            console.log("Quantum COunter: ", _RoundRobinCounter);
+            console.log("Default Quantum: ", _DefaultQuantum);
             console.log("current PCB: ", this.currentPCB);
             console.log("Memory array: ", _Memory.memory);
             //Need to create/upodate memory display   

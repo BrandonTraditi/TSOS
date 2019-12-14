@@ -76,8 +76,21 @@ var TSOS;
             //Run all
             sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "- Runs all proccess'");
             this.commandList[this.commandList.length] = sc;
-            // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            //clear memory
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "- Clears all memory");
+            this.commandList[this.commandList.length] = sc;
+            //PS
+            sc = new TSOS.ShellCommand(this.shellPS, "ps", "- Displays all PID");
+            this.commandList[this.commandList.length] = sc;
+            //kill
+            sc = new TSOS.ShellCommand(this.shellKill, "killpid", "- Kills a certain PID");
+            this.commandList[this.commandList.length] = sc;
+            //Kill all
+            sc = new TSOS.ShellCommand(this.shellKillAll, "killall", "- Kills all PIDS");
+            this.commandList[this.commandList.length] = sc;
+            //Quantum
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "- Select a quantum for RR");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -267,6 +280,21 @@ var TSOS;
                     case "runall":
                         _StdOut.putText("Runs all Proccess'");
                         break;
+                    case "clearmem":
+                        _StdOut.putText("Clears all memory");
+                        break;
+                    case "ps":
+                        _StdOut.putText("Shows proccess'");
+                        break;
+                    case "kill":
+                        _StdOut.putText("Kill a certain PID");
+                        break;
+                    case "killall":
+                        _StdOut.putText("Kills all process'");
+                        break;
+                    case "quantum":
+                        _StdOut.putText("Sets quantum for RR'");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -361,16 +389,15 @@ var TSOS;
             //split array of Hex into individual codes
             var program = userInput.split(" ");
             //Check if code is valid Hex
-            if (counter == userInput.length && _PID < 2) {
+            if (counter == userInput.length) {
                 //Alert it is valid and create a new process                 
                 _ProcessManager.createProcess(program);
-                _StdOut.putText("This is valid hex. Loaded with PID: " + _PID);
-            }
-            else if (counter == userInput.length && _PID == 2) {
-                _StdOut.putText("Sorry all memory slots are full. ");
+                if (_Loaded = true) {
+                    _StdOut.putText("This is valid hex. Loaded with PID: " + _PID);
+                }
             }
             else {
-                _StdOut.putText("This is not a valid program");
+                _StdOut.putText("Program not loaded.");
             }
         };
         Shell.prototype.shellRun = function (args) {
@@ -409,17 +436,46 @@ var TSOS;
                 _StdOut.putText("Please supply a Pid");
             }
         };
-        Shell.prototype.shellRunAll = function () {
+        Shell.prototype.shellRunAll = function (args) {
             console.log(_ProcessManager.waitQueue.getSize());
-            var tempQueue = new TSOS.Queue();
-            var pcbRun = null;
-            var count = _ProcessManager.waitQueue.getSize();
-            for (var i = 0; i < count; i++) {
-                tempQueue = _ProcessManager.waitQueue;
-                pcbRun = tempQueue.dequeue();
-                console.log("Temp Queue: ", tempQueue);
-                console.log("PCB to run: ", pcbRun);
-                _ProcessManager.runProcess(pcbRun);
+            for (var i = 0; i < _ProcessManager.waitQueue.getSize(); i++) {
+                _ProcessManager.runProcess(_ProcessManager.waitQueue.dequeue());
+            }
+        };
+        Shell.prototype.shellClearMem = function (args) {
+            var clear = args.toString();
+            console.log(_Memory.memory);
+            if (clear === "0") {
+                _Memory.clearMemoryPartition(0);
+                _StdOut.putText("Memory partition 0 cleared. ");
+            }
+            else if (clear === "1") {
+                _Memory.clearMemoryPartition(1);
+                _StdOut.putText("Memory partition 1 cleared. ");
+            }
+            else if (clear === "2") {
+                _Memory.clearMemoryPartition(2);
+                _StdOut.putText("Memory partition 2 cleared. ");
+            }
+            else {
+                _Memory.clearMemory();
+                _StdOut.putText("All Memory partitions cleared. ");
+            }
+            console.log(_Memory.memory);
+        };
+        Shell.prototype.shellPS = function () {
+        };
+        Shell.prototype.shellKill = function (args) {
+        };
+        Shell.prototype.shellKillAll = function () {
+        };
+        Shell.prototype.shellQuantum = function (args) {
+            if (args.length > 0) {
+                _DefaultQuantum = args[0];
+                _StdOut.putText("Quantum is set to  " + _DefaultQuantum);
+            }
+            else {
+                _StdOut.put("Please enter a valid number");
             }
         };
         return Shell;

@@ -51,10 +51,11 @@ module TSOS{
             for(let i = 0; i < program.length; i++){
                 this.writeByte(partition, i, program[i]);
             }
+            //Control.memoryUpdate();
 
         }
         //clears all memory
-        public clearMemory(parition:number): void{
+        public clearMemory(): void{
             for(let i = 0; i < this.memory.length; i++){
                 this.memory[i] = "00";
             } 

@@ -12,6 +12,7 @@ module TSOS{
             public runAll: boolean = false
         ){};
 
+
         //public currentPCB: TSOS.PCB;
 
         public createProcess(program: Array<string>): void{
@@ -40,10 +41,11 @@ module TSOS{
                 //console.log("pcb: ", pcb);
                 //console.log("program: ", program);
                 //console.log("Wait queue ", this.waitQueue);
-                console.log("Wait Queue Size: ", this.waitQueue.getSize());
+                //console.log("Wait Queue Size: ", this.waitQueue.getSize());
                 //console.log("process array: ", this.processArray);
+                
             }else{
-                _StdOut.putText("Program not loaded.");
+                _StdOut.putText("Memory is full.");
             }
 
 
@@ -53,8 +55,8 @@ module TSOS{
             if(this.runAll == false){
                 this.readyQueue.enqueue(pcb);
                 pcb.state = "Running";
-                _CPU.isExecuting = true;
                 _CPU.loadProgram(pcb);
+                _CPU.isExecuting = true;
                 //Debugging
                 //console.log("Run Process pcb: ", pcb);
                 //console.log("Ready queue: ", this.readyQueue);

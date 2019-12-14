@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="../os/cpuScheduler.ts" />
 
 /* ------------
      CPU.ts
@@ -31,7 +32,7 @@ module TSOS {
 
         }
 
-        public init(): void {
+        public init(){
         }
 
         //Load in the pcb and set to current pcb
@@ -40,7 +41,6 @@ module TSOS {
             console.log("is Executing?", this.isExecuting);
             this.currentPCB = pcb;
             this.isExecuting = true;
-            this.cycle();
         }
 
         public updatePCB(): void{
@@ -78,6 +78,7 @@ module TSOS {
                 //console.log("PC before run: ", this.ProgramCounter);
                 //console.log("Acc before run: ", this.Acc);
                 //console.log("Memory array: ", _Memory.memory);
+
                 
 
                 //Decide what to do with instruction
@@ -284,6 +285,13 @@ module TSOS {
             } 
             //keep pcb updated
             this.updatePCB();
+            _RoundRobinCounter++;
+            if(_RoundRobinCounter > _DefaultQuantum){
+                this.isExecuting = false;
+                _CpuScheduler.roundRobin();
+            }
+            console.log("Quantum COunter: ", _RoundRobinCounter);
+            console.log("Default Quantum: ", _DefaultQuantum);
             console.log("current PCB: ", this.currentPCB);
             console.log("Memory array: ", _Memory.memory);
 
