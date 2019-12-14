@@ -14,7 +14,8 @@ module TSOS{
             var pcb: PCB = _CPU.currentPCB;
             console.log("RR PCB: ", pcb);
             this.nextPCB = _ProcessManager.readyQueue.dequeue();
-            console.log("Dequeue ready queue: ", _ProcessManager.readyQueue);
+            console.log("Dequeue ready queue: ", this.nextPCB);
+            console.log(_ProcessManager.readyQueue);
             //var tempQueue: TSOS.Queue = new Queue();
             //tempQueue.enqueue(pcb);
             //console.log("Temp Queue: ", tempQueue);
@@ -22,7 +23,8 @@ module TSOS{
                 this.nextPCB.state = "Running";
                 _RoundRobinCounter = 0;
                 _CPU.loadProgram(this.nextPCB);
-                _ProcessManager.readyQueue.unShift(pcb);
+                _ProcessManager.readyQueue.enqueue(pcb);
+                console.log("ReInitalize Ready Queue: ", _ProcessManager.readyQueue);
             }
 
             _CPU.isExecuting = true;

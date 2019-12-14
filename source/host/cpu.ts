@@ -33,6 +33,8 @@ module TSOS {
         }
 
         public init(){
+        
+            
         }
 
 
@@ -43,11 +45,13 @@ module TSOS {
             console.log("Ready Queue: ", _ProcessManager.readyQueue);
             this.currentPCB = pcb;
             this.isExecuting = true;
+            //_ProcessManager.readyQueue.dequeue();
             /*this.ProgramCounter = this.currentPCB.programCounter;
             this.Acc = this.currentPCB.accumulator;
             this.Xreg = this.currentPCB.x;
             this.Yreg = this.currentPCB.x;
-            this.Zflag = this.currentPCB.z;*/
+            this.Zflag = this.currentPCB.z;
+            this.partitionIndex = this.currentPCB.partitionIndex;*/
         }
 
         public updatePCB(): void{
@@ -60,8 +64,13 @@ module TSOS {
         public cycle(): void {
             //console.log("Process about to run: ", this.currentPCB);
             console.log("cycle executing");
+            console.log("Quantum COunter: ", _RoundRobinCounter);
+            console.log("Default Quantum: ", _DefaultQuantum);
+            console.log("current PCB: ", this.currentPCB);
+            //console.log("Memory array: ", _Memory.memory);
+            
             //console.log("current PCB: ", this.currentPCB); 
-            if(this.currentPCB !== null && this.isExecuting == true){
+            if(this.currentPCB !== null && this.isExecuting == true && _RoundRobinCounter != _DefaultQuantum){
                _Kernel.krnTrace('CPU cycle');
                // TODO: Accumulate CPU usage and profiling statistics here.
                 // Do the real work here. Be sure to set this.isExecuting appropriately.
@@ -79,7 +88,7 @@ module TSOS {
                 //this.ProgramCounter = 50;
                 //this.Xreg = 2;
                 //this.Yreg = 2;
-                console.log("instruction: ",this.instruction);
+                //console.log("instruction: ",this.instruction);
                 //console.log("ZFlag: ", this.Zflag);
                 //console.log("partition index: ", this.partitionIndex);
                 //console.log("PC before run: ", this.ProgramCounter);
@@ -98,6 +107,7 @@ module TSOS {
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
                     //console.log("Acc: ", this.Acc);
                     this.ProgramCounter+= 2;
+                    _RoundRobinCounter++;
 
                     //debugging 
                     //console.log("A9 ran: ", this.currentPCB); 
@@ -109,6 +119,7 @@ module TSOS {
                     let hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
                     this.ProgramCounter+= 3;
+                    _RoundRobinCounter++;
 
                     //debugging
                     //console.log("AD ran: ", this.currentPCB); 
@@ -122,6 +133,7 @@ module TSOS {
                     let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     _Memory.writeByte(this.partitionIndex, hexDec, this.Acc.toString(16));
                     this.ProgramCounter+= 3;
+                    _RoundRobinCounter++;
 
                     //console.log("Hex value: ", hexDec);//8D = 141
                     //console.log("Memory array: ", _Memory.memory);//should have 8d in spot 141 on array
@@ -132,6 +144,7 @@ module TSOS {
                     let hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.Acc += parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
                     this.ProgramCounter+= 3;
+                    _RoundRobinCounter++;
 
                     //console.log("Hex decimal: ", hexDec); //6D = 109
                     //console.log("Memory array: ", _Memory.memory);
@@ -146,6 +159,7 @@ module TSOS {
                     //console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
                     this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
                     this.ProgramCounter+= 2;
+                    _RoundRobinCounter++;
 
                     //console.log("Xreg value: ", this.Xreg);//A2 = 162 
 
@@ -154,6 +168,7 @@ module TSOS {
                     let xMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, xMem), 16);
                     this.ProgramCounter+=3;
+                    _RoundRobinCounter++;
 
                     //console.log("xMem: ", xMem);//AE = 174
                     //console.log("Xreg value: ", this.Xreg);
@@ -162,6 +177,7 @@ module TSOS {
                     //load y reg with constant
                     this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.ProgramCounter+= 2;
+                    _RoundRobinCounter++;
 
                     //console.log("Yreg value: ", this.Yreg);//A0 = 160
 
@@ -170,6 +186,7 @@ module TSOS {
                    let yMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter+ 1), 16);
                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, yMem), 16);
                    this.ProgramCounter+= 3;
+                   _RoundRobinCounter++;
 
                    //console.log("yMem: ", yMem);//AC = 172
                    //console.log("Yreg value: ", this.Yreg);
@@ -190,6 +207,7 @@ module TSOS {
                       this.Zflag = 0;
                   }
                   this.ProgramCounter+= 3;
+                  _RoundRobinCounter++;
 
                   //console.log("hex: ", hex);//EC = 236
                   //console.log("byte: ", byte);
@@ -206,13 +224,16 @@ module TSOS {
                         if(branchPC > _MemoryPartitionSize - 1){
                             this.ProgramCounter = branchPC - _MemoryPartitionSize;
                             this.ProgramCounter += 2;
+                            _RoundRobinCounter++;
                         }else{
                             this.ProgramCounter = branchPC;
                             this.ProgramCounter+=2;
+                            _RoundRobinCounter++;
                         }
 
                     }else{
                         this.ProgramCounter+= 2;
+                        _RoundRobinCounter++;
                     }
 
                     console.log("BranchN: ", branchN);//D0 = 208
@@ -227,6 +248,7 @@ module TSOS {
                    hexLoc ++;
                    _Memory.writeByte(this.partitionIndex, hexDec, hexLoc.toString(16));
                    this.ProgramCounter+= 3;
+                   _RoundRobinCounter++;
 
                    //console.log("HexDec: ", hexDec);//EE = 238
                    //console.log("HexLoc: ", hexLoc);
@@ -243,6 +265,7 @@ module TSOS {
                        //_Console.advanceLine();
                        OutputArray.push(this.Yreg.toString());
                        this.ProgramCounter++;
+                       _RoundRobinCounter++;
                    }else if(this.Xreg === 2){
                        var y = this.Yreg;
                        var output = "";
@@ -259,9 +282,11 @@ module TSOS {
                        //_Console.advanceLine();
                        OutputArray.push(output);
                        this.ProgramCounter++;
+                       _RoundRobinCounter++;
                    }else{
 
                    this.ProgramCounter++;
+                   _RoundRobinCounter++;
 
                    }
 
@@ -274,10 +299,12 @@ module TSOS {
                 }else if(this.instruction == "EA"){
                   //no op
                   this.ProgramCounter++;
+                  _RoundRobinCounter++;
 
                 }else if(this.instruction == "00"){
                   //break program
                   this.ProgramCounter++;
+                  _RoundRobinCounter++;
                   this.isExecuting = false;
                   var out = OutputArray.join("");
                   _StdOut.putText(out);
@@ -287,23 +314,14 @@ module TSOS {
                 }else{
                   _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));
                   this.isExecuting = false;
-            }          
+            }
             
-            } 
-            //keep pcb updated
             this.updatePCB();
 
-            _RoundRobinCounter++;
-            if(_RoundRobinCounter > _DefaultQuantum){
-                this.isExecuting = false;
-                _CpuScheduler.roundRobin();
-            }
-            console.log("Quantum COunter: ", _RoundRobinCounter);
-            console.log("Default Quantum: ", _DefaultQuantum);
-            console.log("current PCB: ", this.currentPCB);
-            console.log("Memory array: ", _Memory.memory);
-
             
+        }else{
+            _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ,0));
+        }
 
            //Need to create/upodate memory display   
         }//end cycle

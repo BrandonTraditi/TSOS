@@ -39,6 +39,7 @@ module TSOS {
             _Memory.init();
             _MemoryManager = new memoryManager();
             _ProcessManager = new ProcessManager();
+            _CpuScheduler = new cpuScheduler();
             // Load the Keyboard Device Driver
             this.krnTrace("Loading the keyboard device driver.");
             _krnKeyboardDriver = new DeviceDriverKeyboard();     // Construct it.
@@ -129,6 +130,9 @@ module TSOS {
                 case KEYBOARD_IRQ:
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
+                    break;
+                case ROUNDROBIN_IRQ:
+                    _CpuScheduler.roundRobin();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
