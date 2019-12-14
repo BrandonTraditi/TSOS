@@ -128,12 +128,36 @@ module TSOS {
                                 "runall",
                                 "- Runs all proccess'");
             this.commandList[this.commandList.length] = sc;
-
-
+                        
+            //clear memory
+            sc = new ShellCommand(this.shellClearMem,
+                                 "ClearMem",
+                                "- Clears all memory");
+            this.commandList[this.commandList.length] = sc;
             
+            //PS
+            sc = new ShellCommand(this.shellPS,
+                                "Ps",
+                                "- Displays all PID");
+            this.commandList[this.commandList.length] = sc;
 
-            // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            //kill
+            sc = new ShellCommand(this.shellKill,
+                                 "killPid",
+                                "- Kills a certain PID");
+            this.commandList[this.commandList.length] = sc;
+
+            //Kill all
+            sc = new ShellCommand(this.shellKillAll,
+                                 "killAll",
+                                 "- Kills all PIDS");
+            this.commandList[this.commandList.length] = sc;
+
+            //Quantum
+            sc = new ShellCommand(this.shellQuantum,
+                                 "Quantum,",
+                                 "- Select a quantum for RR");
+            this.commandList[this.commandList.length] = sc;
 
             //
             // Display the initial prompt.
@@ -335,6 +359,21 @@ module TSOS {
                     case "runall":
                         _StdOut.putText("Runs all Proccess'")
                         break;
+                    case "clearMem":
+                        _StdOut.putText("Clears all memory");
+                        break;
+                    case "ps":
+                        _StdOut.putText("Shows proccess'");
+                        break;
+                    case "kill":
+                        _StdOut.putText("Kill a certain PID");
+                        break;
+                    case "killAll":
+                        _StdOut.putText("Kills all process'");
+                        break;
+                    case "quantum":
+                        _StdOut.putText("Sets quantum for RR'")
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -482,21 +521,33 @@ module TSOS {
             }
         }
 
-        public shellRunAll(){
+        public shellRunAll(args){
             console.log(_ProcessManager.waitQueue.getSize());
-            let tempQueue: TSOS.Queue = new Queue();
-            let pcbRun: PCB = null;
-            let count = _ProcessManager.waitQueue.getSize();
 
-            for(var i = 0; i < count; i++){
-
-                tempQueue = _ProcessManager.waitQueue;
-                pcbRun = tempQueue.dequeue();
-
-                console.log("Temp Queue: ", tempQueue);
-                console.log("PCB to run: ", pcbRun);
-                _ProcessManager.runProcess(pcbRun);
+            for(var i = 0; i < _ProcessManager.waitQueue.getSize(); i++){
+                _ProcessManager.runProcess(_ProcessManager.waitQueue.dequeue());
             }
+
+        }
+
+        
+        public shellClearMem() {
+
+        }
+
+        public shellPS() {
+    
+        }
+
+        public shellKill(args) {
+
+        }
+
+        public shellKillAll(){
+
+        }
+
+        public shellQuantum(args){
 
         }
 
