@@ -12,6 +12,7 @@ module TSOS{
             for(var i= 0; i < this.memory.length; i++){
                 this.memory[i]= "00";
             }
+            
         }
         // read memory block in particular partition 
         public readMemory(partition: number, PC: number): string {

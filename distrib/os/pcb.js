@@ -11,11 +11,12 @@ var TSOS;
             this.y = 0;
             this.z = 0;
             this.location = null;
-            this.partitionIndex = 0;
+            this.partitionIndex = -1;
             this.pid = p;
         }
-        PCB.prototype.updatePCB = function (pc, Acc, xReg, Yreg, Zflag) {
-            this.programCounter = pc;
+        PCB.prototype.updatePCB = function (PC, IR, Acc, xReg, Yreg, Zflag) {
+            this.programCounter = PC;
+            this.instructionReg = IR;
             this.accumulator = Acc;
             this.x = xReg;
             this.y = Yreg;

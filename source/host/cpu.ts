@@ -34,27 +34,18 @@ module TSOS {
         public init(): void {
         }
 
-        //Load program. Gets called in runProcess 
+        //Load in the pcb and set to current pcb
         public loadProgram(pcb: TSOS.PCB): void{
+            console.log("Load program pcb: ", pcb);
+            console.log("is Executing?", this.isExecuting);
             this.currentPCB = pcb;
-            //this.currentPCB.state = "Running";
-            this.loadFromPCB();
-
-        }
-
-        //Updates pcb to now run in cycle
-        public loadFromPCB(): void{
-            this.ProgramCounter = this.currentPCB.programCounter;
-            this.Acc = this.currentPCB.accumulator;
-            this.partitionIndex = this.currentPCB.partitionIndex;
-            this.Xreg = this.currentPCB.x;
-            this.Yreg = this.currentPCB.y;
-            this.Zflag = this.currentPCB.z;
+            this.isExecuting = true;
+            this.cycle();
         }
 
         public updatePCB(): void{
             if(this.currentPCB !== null){
-                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
+                this.currentPCB.updatePCB(this.ProgramCounter, this.instruction, this.Acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
         }
@@ -62,9 +53,7 @@ module TSOS {
         public cycle(): void {
             //console.log("Process about to run: ", this.currentPCB);
             console.log("cycle executing");
-            console.log(OutputArray);
             //console.log("current PCB: ", this.currentPCB); 
-            
             if(this.currentPCB !== null && this.isExecuting == true){
                _Kernel.krnTrace('CPU cycle');
                // TODO: Accumulate CPU usage and profiling statistics here.
@@ -300,7 +289,7 @@ module TSOS {
 
             
 
-            //Need to create/upodate memory display   
+           //Need to create/upodate memory display   
         }//end cycle
         
     }

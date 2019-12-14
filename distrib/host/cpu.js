@@ -38,31 +38,23 @@ var TSOS;
         }
         Cpu.prototype.init = function () {
         };
-        //Load program. Gets called in runProcess 
+        //Load in the pcb and set to current pcb
         Cpu.prototype.loadProgram = function (pcb) {
+            console.log("Load program pcb: ", pcb);
+            console.log("is Executing?", this.isExecuting);
             this.currentPCB = pcb;
-            //this.currentPCB.state = "Running";
-            this.loadFromPCB();
-        };
-        //Updates pcb to now run in cycle
-        Cpu.prototype.loadFromPCB = function () {
-            this.ProgramCounter = this.currentPCB.programCounter;
-            this.Acc = this.currentPCB.accumulator;
-            this.partitionIndex = this.currentPCB.partitionIndex;
-            this.Xreg = this.currentPCB.x;
-            this.Yreg = this.currentPCB.y;
-            this.Zflag = this.currentPCB.z;
+            this.isExecuting = true;
+            this.cycle();
         };
         Cpu.prototype.updatePCB = function () {
             if (this.currentPCB !== null) {
-                this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
+                this.currentPCB.updatePCB(this.ProgramCounter, this.instruction, this.Acc, this.Xreg, this.Yreg, this.Zflag);
                 //need to create memory display and update here
             }
         };
         Cpu.prototype.cycle = function () {
             //console.log("Process about to run: ", this.currentPCB);
             console.log("cycle executing");
-            console.log(OutputArray);
             //console.log("current PCB: ", this.currentPCB); 
             if (this.currentPCB !== null && this.isExecuting == true) {
                 _Kernel.krnTrace('CPU cycle');

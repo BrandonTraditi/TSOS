@@ -6,11 +6,6 @@
 ///<reference path="memoryManager.ts" />
 ///<reference path="pcb.ts" />
 
-
-
-
-
-
 /* ------------
    Shell.ts
 
@@ -127,6 +122,13 @@ module TSOS {
                                  "run",
                                  "- Runs a specific proccess");
             this.commandList[this.commandList.length] = sc;
+
+            //Run all
+            sc = new ShellCommand(this.shellRunAll,
+                                "runall",
+                                "- Runs all proccess'");
+            this.commandList[this.commandList.length] = sc;
+
 
             
 
@@ -330,7 +332,9 @@ module TSOS {
                     case "run":
                         _StdOut.putText("Runs a specific process");
                         break;
-
+                    case "runall":
+                        _StdOut.putText("Runs all Proccess'")
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -476,6 +480,24 @@ module TSOS {
             }else{
                 _StdOut.putText("Please supply a Pid");
             }
+        }
+
+        public shellRunAll(){
+            console.log(_ProcessManager.waitQueue.getSize());
+            let tempQueue: TSOS.Queue = new Queue();
+            let pcbRun: PCB = null;
+            let count = _ProcessManager.waitQueue.getSize();
+
+            for(var i = 0; i < count; i++){
+
+                tempQueue = _ProcessManager.waitQueue;
+                pcbRun = tempQueue.dequeue();
+
+                console.log("Temp Queue: ", tempQueue);
+                console.log("PCB to run: ", pcbRun);
+                _ProcessManager.runProcess(pcbRun);
+            }
+
         }
 
     

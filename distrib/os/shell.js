@@ -73,6 +73,9 @@ var TSOS;
             //Run
             sc = new TSOS.ShellCommand(this.shellRun, "run", "- Runs a specific proccess");
             this.commandList[this.commandList.length] = sc;
+            //Run all
+            sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "- Runs all proccess'");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -261,6 +264,9 @@ var TSOS;
                     case "run":
                         _StdOut.putText("Runs a specific process");
                         break;
+                    case "runall":
+                        _StdOut.putText("Runs all Proccess'");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -401,6 +407,19 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Please supply a Pid");
+            }
+        };
+        Shell.prototype.shellRunAll = function () {
+            console.log(_ProcessManager.waitQueue.getSize());
+            var tempQueue = new TSOS.Queue();
+            var pcbRun = null;
+            var count = _ProcessManager.waitQueue.getSize();
+            for (var i = 0; i < count; i++) {
+                tempQueue = _ProcessManager.waitQueue;
+                pcbRun = tempQueue.dequeue();
+                console.log("Temp Queue: ", tempQueue);
+                console.log("PCB to run: ", pcbRun);
+                _ProcessManager.runProcess(pcbRun);
             }
         };
         return Shell;

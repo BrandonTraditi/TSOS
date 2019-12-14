@@ -11,14 +11,15 @@ module TSOS{
         public y: number = 0;
         public z: number = 0;
         public location: string = null;
-        public partitionIndex: number = 0;
+        public partitionIndex: number = -1;
 
         constructor(p){
             this.pid = p;
         }
 
-       public updatePCB(pc: number, Acc: number, xReg: number, Yreg: number, Zflag: number): void{
-            this.programCounter = pc;
+       public updatePCB(PC: number, IR: string, Acc: number, xReg: number, Yreg: number, Zflag: number): void{
+            this.programCounter = PC;
+            this.instructionReg = IR;
             this.accumulator = Acc;
             this.x = xReg;
             this.y = Yreg;

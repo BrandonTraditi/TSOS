@@ -31,15 +31,17 @@ module TSOS{
                 _MemoryManager.writeProgramToMemory(pcb.partitionIndex, program);
                 //add pcb to wait queue 
                 this.waitQueue.enqueue(pcb);
+                pcb.state = "Waiting";
                 //set indtruction registry 
                 pcb.instructionReg = _Memory.readMemory(pcb.partitionIndex, pcb.programCounter);
                 //set location
                 pcb.location = "MEMORY";
                 //used for debugging
-               /* console.log("pcb: ", pcb);
-                console.log("program: ", program);
-                console.log("Wait queue ", this.waitQueue);
-                console.log("process array: ", this.processArray);*/
+                //console.log("pcb: ", pcb);
+                //console.log("program: ", program);
+                //console.log("Wait queue ", this.waitQueue);
+                console.log("Wait Queue Size: ", this.waitQueue.getSize());
+                //console.log("process array: ", this.processArray);
             }else{
                 _StdOut.putText("Program not loaded.");
             }
@@ -50,16 +52,29 @@ module TSOS{
         public runProcess(pcb:PCB): void{
             if(this.runAll == false){
                 this.readyQueue.enqueue(pcb);
+                pcb.state = "Running";
+                _CPU.isExecuting = true;
                 _CPU.loadProgram(pcb);
                 //Debugging
                 //console.log("Run Process pcb: ", pcb);
                 //console.log("Ready queue: ", this.readyQueue);
-                _CPU.isExecuting = true;
+                //_CPU.isExecuting = true;
             }else{
-                pcb.state = "Ready";
-                this.readyQueue.enqueue(pcb);
+                console.log("runall is true");
+                console.log("Wait queue size: ", _ProcessManager.waitQueue.getSize());
+
+                    this.readyQueue.enqueue(pcb);
+                    pcb.state = "Running";
+                    _CPU.loadProgram(pcb);
+                    _CPU.isExecuting = true;
             }
         }
+
+        /*public runAllProccesses(): void{
+
+
+                console.log("pcbRun: ", _ProcessManager.waitQueue.dequeue());
+            }*/
 
 
 
