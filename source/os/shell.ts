@@ -533,6 +533,7 @@ module TSOS {
 
         public shellRunAll(){
             console.log("runall initiated");
+            _TurnOnRR = true;
             _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
             /*while(_ProcessManager.processArray.length > 0){
                 var pcbRun: PCB = null;
