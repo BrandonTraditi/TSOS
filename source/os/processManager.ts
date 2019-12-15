@@ -33,8 +33,10 @@ module TSOS{
                 //add pcb to wait queue 
                 this.waitQueue.enqueue(pcb);
                 this.readyQueue.enqueue(pcb);
+                //this.processArray.push(pcb);
                 console.log(this.waitQueue);
                 console.log(this.readyQueue);
+                console.log(this.processArray);
                 pcb.state = "Waiting";
                 //set indtruction registry 
                 pcb.instructionReg = _Memory.readMemory(pcb.partitionIndex, pcb.programCounter);
@@ -69,12 +71,13 @@ module TSOS{
                 //_CPU.isExecuting = true;
             }else{
                 console.log("runall is true");
-                console.log("Wait queue size: ", _ProcessManager.waitQueue.getSize());
+                console.log("Array Size: ", this.processArray.length);
+                console.log("Proccess array: ", this.processArray);
 
-                    this.readyQueue.enqueue(pcb);
-                    pcb.state = "Running";
-                    _CPU.loadProgram(pcb);
-                    _CPU.isExecuting = true;
+                for(var i; i < this.processArray.length; i++){
+                    var pcbRun = this.processArray[i];
+                    _CPU.loadProgram(pcbRun);
+                }
             }
         }
 

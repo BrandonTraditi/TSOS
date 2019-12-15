@@ -531,13 +531,24 @@ module TSOS {
             }
         }
 
-        public shellRunAll(args){
-            console.log(_ProcessManager.waitQueue.getSize());
-
-            for(var i = 0; i < _ProcessManager.waitQueue.getSize(); i++){
-                _ProcessManager.runProcess(_ProcessManager.waitQueue.dequeue());
+        public shellRunAll(){
+            console.log("runall initiated");
+            _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
+            /*while(_ProcessManager.processArray.length > 0){
+                var pcbRun: PCB = null;
+                pcbRun = _ProcessManager.processArray.pop();
             }
+            _CPU.loadProgram(pcbRun);
+            console.log(_ProcessManager.processArray);
+            console.log(_ProcessManager.processArray.length);
 
+            for(var i; i < _ProcessManager.processArray.length; i++){
+                var pcbRun = _ProcessManager.processArray[i];
+                _CPU.loadProgram(pcbRun);
+
+                console.log("Array Size: ", _ProcessManager.processArray.length);
+                console.log("Proccess array: ", _ProcessManager.processArray);
+            }*/
         }
 
         
@@ -562,6 +573,11 @@ module TSOS {
         }
 
         public shellPS() {
+            for(var i = 0; i < _ProcessManager.processArray.length; i++){
+                var pidPA = _ProcessManager.processArray[i].pid;
+                _StdOut.putText("PID: " + pidPA);
+                _Console.advanceLine();
+            }
     
         }
 

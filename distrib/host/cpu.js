@@ -260,11 +260,14 @@ var TSOS;
                 else if (this.instruction == "00") {
                     //break program
                     this.ProgramCounter++;
+                    this.currentPCB.state = "done";
                     this.isExecuting = false;
                     var out = OutputArray.join("");
                     _StdOut.putText(out);
                     _Console.advanceLine();
                     _OsShell.putPrompt();
+                    console.log(_ProcessManager.processArray);
+                    console.log(_ProcessManager.processArray.length);
                 }
                 else {
                     _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));
