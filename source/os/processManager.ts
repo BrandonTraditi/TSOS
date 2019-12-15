@@ -32,6 +32,9 @@ module TSOS{
                 _MemoryManager.writeProgramToMemory(pcb.partitionIndex, program);
                 //add pcb to wait queue 
                 this.waitQueue.enqueue(pcb);
+                this.readyQueue.enqueue(pcb);
+                console.log(this.waitQueue);
+                console.log(this.readyQueue);
                 pcb.state = "Waiting";
                 //set indtruction registry 
                 pcb.instructionReg = _Memory.readMemory(pcb.partitionIndex, pcb.programCounter);
@@ -53,7 +56,7 @@ module TSOS{
 
         public runProcess(pcb:PCB): void{
             if(this.runAll == false){
-                this.readyQueue.enqueue(pcb);
+                //this.readyQueue.enqueue(pcb);
                 pcb.state = "Running";
                 _CPU.loadProgram(pcb);
                 _CPU.isExecuting = true;

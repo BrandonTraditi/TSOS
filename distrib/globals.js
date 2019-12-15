@@ -16,8 +16,7 @@ var CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second
 var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
-var LOAD_PROCCESS_IRQ = 2;
-var UNLOAD_PROCCESS_IRQ = 3;
+var ROUNDROBIN_IRQ = 2;
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
@@ -59,9 +58,9 @@ var _MemorySize = 768;
 var _MemoryPartitionSize = 256;
 var OutputArray = ["Your output: "];
 var _Control;
-var _DefaultQuantum = 6;
 var _SchedAlgo = "rr";
 var _Loaded = true;
+var _DefaultQuantum = 6;
 var _CpuScheduler;
 var _RoundRobinCounter = 0;
 var onDocumentLoad = function () {

@@ -23,6 +23,12 @@ var TSOS;
         Queue.prototype.enqueue = function (element) {
             this.q.push(element);
         };
+        Queue.prototype.unShift = function (element) {
+            this.q.unshift(element);
+        };
+        Queue.prototype.pop = function () {
+            this.q.pop();
+        };
         Queue.prototype.dequeue = function () {
             var retVal = null;
             if (this.q.length > 0) {

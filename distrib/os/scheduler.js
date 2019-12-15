@@ -20,9 +20,9 @@ module TSOS{
         }
 
         public roundRobin(){
-            if (this.counter === 0){
+            if (this.quantumCounter === 0){
                 _KernelInputQueue.enqueue(new Interrupt(UNLOAD_PROCCESS_IRQ, 0));
-            }else if(this.counter == this.quantum){
+            }else if(this.quantumCounter == this.quantum){
                 if(_ProcessManager.readyQueue.isEmpty()){
                     //get curr pcb and put it back on the queue
                     if(_CPU.currentPCB.state != "Terminated")
@@ -31,7 +31,7 @@ module TSOS{
                 _KernelInterruptQueue.enqueue(new Interrupt(UNLOAD_PROCCESS_IRQ, 0));
             }
 
-            this.counter = 0;
+            this.quantumCounter = 0;
         }
 
     }

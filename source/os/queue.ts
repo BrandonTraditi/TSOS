@@ -25,6 +25,10 @@ module TSOS {
             this.q.push(element);
         }
 
+        public unShift(element) {
+            this.q.unshift(element);
+        }
+
         public dequeue() {
             var retVal = null;
             if (this.q.length > 0) {

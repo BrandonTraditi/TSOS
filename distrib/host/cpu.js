@@ -2,15 +2,12 @@
 ///<reference path="../os/cpuScheduler.ts" />
 /* ------------
      CPU.ts
-
      Requires global.ts.
-
      Routines for the host CPU simulation, NOT for the OS itself.
      In this manner, it's A LITTLE BIT like a hypervisor,
      in that the Document environment inside a browser is the "bare metal" (so to speak) for which we write code
      that hosts our client OS. But that analogy only goes so far, and the lines are blurred, because we are using
      TypeScript/JavaScript in both the host and client environments.
-
      This code references page numbers in the text book:
      Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
      ------------ */
@@ -42,14 +39,27 @@ var TSOS;
         //Load in the pcb and set to current pcb
         Cpu.prototype.loadProgram = function (pcb) {
             console.log("Load program pcb: ", pcb);
-            console.log("is Executing?", this.isExecuting);
             this.currentPCB = pcb;
+            //Updates constructor with values from pcb sent in
+            this.ProgramCounter = this.currentPCB.programCounter;
+            this.instruction = this.currentPCB.instructionReg;
+            this.Acc = this.currentPCB.accumulator;
+            this.Xreg = this.currentPCB.x;
+            this.Yreg = this.currentPCB.y;
+            this.Zflag = this.currentPCB.z;
             this.isExecuting = true;
         };
         Cpu.prototype.updatePCB = function () {
             if (this.currentPCB !== null) {
-                this.currentPCB.updatePCB(this.ProgramCounter, this.instruction, this.Acc, this.Xreg, this.Yreg, this.Zflag);
-                //need to create memory display and update here
+                //this.currentPCB.updatePCB(this.ProgramCounter, this.Acc, this.Xreg, this.Yreg, this.Zflag);
+                //need to create memory display and update 
+                //Keeps currentPCB updated to then switch on and off 
+                this.currentPCB.programCounter = this.ProgramCounter;
+                this.currentPCB.instructionReg = this.instruction;
+                this.currentPCB.accumulator = this.Acc;
+                this.currentPCB.x = this.Xreg;
+                this.currentPCB.y = this.Yreg;
+                this.currentPCB.z = this.Zflag;
             }
         };
         Cpu.prototype.cycle = function () {
@@ -62,7 +72,7 @@ var TSOS;
                 // Do the real work here. Be sure to set this.isExecuting appropriately.
                 //get instruction
                 var currentInstruction = _Memory.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
-                this.instruction = currentInstruction;
+                this.instruction = currentInstruction.toString();
                 //OutputArray = ["Your output: "];
                 //Debugging
                 //this.Acc = 10;
@@ -129,7 +139,7 @@ var TSOS;
                     //console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
                     this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
                     this.ProgramCounter += 2;
-                    console.log("Xreg value: ", this.Xreg); //A2 = 162 
+                    //console.log("Xreg value: ", this.Xreg);//A2 = 162 
                 }
                 else if (this.instruction == "AE") {
                     //load x reg from memory
@@ -155,12 +165,12 @@ var TSOS;
                 }
                 else if (this.instruction == "EC") {
                     //compare byte at address to x reg, set z flag
-                    console.log("HexIndex: ", _Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1));
+                    //console.log("HexIndex: ", _Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1));
                     var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     var byte = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
-                    console.log("Hex: ", hex);
-                    console.log("byte: ", byte);
-                    console.log("xReg", this.Xreg);
+                    //console.log("Hex: ", hex);
+                    //console.log("byte: ", byte);
+                    //console.log("xReg", this.Xreg);
                     //comparison
                     if (byte == this.Xreg) {
                         this.Zflag = 1;
@@ -176,7 +186,7 @@ var TSOS;
                 }
                 else if (this.instruction == "D0") {
                     //Branch N bytes if z flag = 0
-                    console.log("Branch index ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16));
+                    //console.log("Branch index ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16));
                     if (this.Zflag === 0) {
                         var branchN = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                         var branchPC = this.ProgramCounter + branchN;
@@ -192,9 +202,9 @@ var TSOS;
                     else {
                         this.ProgramCounter += 2;
                     }
-                    console.log("BranchN: ", branchN); //D0 = 208
-                    console.log("BranchPC: ", branchPC);
-                    console.log("Program Counter: ", this.ProgramCounter);
+                    //console.log("BranchN: ", branchN);//D0 = 208
+                    //console.log("BranchPC: ", branchPC);
+                    //console.log("Program Counter: ", this.ProgramCounter);
                 }
                 else if (this.instruction == "EE") {
                     //increment byte
@@ -210,9 +220,9 @@ var TSOS;
                 }
                 else if (this.instruction == "FF") {
                     //system call
-                    console.log("Xreg value: ", this.Xreg);
-                    console.log("Y reg value: ", this.Yreg);
-                    console.log("Y to string: ", this.Yreg.toString());
+                    //console.log("Xreg value: ", this.Xreg);
+                    //console.log("Y reg value: ", this.Yreg);
+                    //console.log("Y to string: ", this.Yreg.toString());
                     if (this.Xreg === 1) {
                         _StdOut.putText(this.Yreg.toString());
                         //_Console.advanceLine();
@@ -261,13 +271,13 @@ var TSOS;
             }
             //keep pcb updated
             this.updatePCB();
-            _RoundRobinCounter++;
-            if (_RoundRobinCounter > _DefaultQuantum) {
+            //_RoundRobinCounter++;
+            /*if(_RoundRobinCounter > _DefaultQuantum){
                 this.isExecuting = false;
-                _CpuScheduler.roundRobin(this.currentPCB);
+                _CpuScheduler.roundRobin();
             }
             console.log("Quantum COunter: ", _RoundRobinCounter);
-            console.log("Default Quantum: ", _DefaultQuantum);
+            console.log("Default Quantum: ", _DefaultQuantum);*/
             console.log("current PCB: ", this.currentPCB);
             console.log("Memory array: ", _Memory.memory);
             //Need to create/upodate memory display   

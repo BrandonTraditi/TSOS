@@ -35,6 +35,7 @@ var TSOS;
             _Memory.init();
             _MemoryManager = new TSOS.memoryManager();
             _ProcessManager = new TSOS.ProcessManager();
+            _CpuScheduler = new TSOS.cpuScheduler();
             // Load the Keyboard Device Driver
             this.krnTrace("Loading the keyboard device driver.");
             _krnKeyboardDriver = new TSOS.DeviceDriverKeyboard(); // Construct it.
@@ -115,12 +116,9 @@ var TSOS;
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
-                // case LOAD_PROCCESS_IRQ:
-                //    _CpuScheduler.loadProccess();
-                //     break;
-                //case UNLOAD_PROCCESS_IRQ:
-                //    _CpuScheduler.getProcess();
-                //    break;
+                case ROUNDROBIN_IRQ:
+                    _CpuScheduler.roundRobin();
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
