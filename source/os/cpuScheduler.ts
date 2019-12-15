@@ -12,6 +12,7 @@ module TSOS{
 
         public roundRobin(){
             var pcb: PCB = _CPU.currentPCB;
+            _ProcessManager.readyQueue.enqueue(pcb);
             console.log("RR PCB: ", pcb);
             this.nextPCB = _ProcessManager.readyQueue.dequeue();
             console.log("Dequeue ready queue: ", this.nextPCB);

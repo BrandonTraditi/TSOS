@@ -16,14 +16,5 @@ module TSOS{
         constructor(p){
             this.pid = p;
         }
-
-       public updatePCB(PC: number, IR: string, Acc: number, xReg: number, Yreg: number, Zflag: number): void{
-            this.programCounter = PC;
-            this.instructionReg = IR;
-            this.accumulator = Acc;
-            this.x = xReg;
-            this.y = Yreg;
-            this.z = Zflag;
-        }
     }
 }

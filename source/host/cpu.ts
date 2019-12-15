@@ -301,11 +301,11 @@
                 } 
                 //keep pcb updated
                 this.updatePCB();
-                //_RoundRobinCounter++;
-                /*if(_RoundRobinCounter > _DefaultQuantum){
-                    this.isExecuting = false;
-                    _CpuScheduler.roundRobin();
+                _RoundRobinCounter++;
+                if(_RoundRobinCounter > _DefaultQuantum){
+                    _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
                 }
+                /*
                 console.log("Quantum COunter: ", _RoundRobinCounter);
                 console.log("Default Quantum: ", _DefaultQuantum);*/
                 console.log("current PCB: ", this.currentPCB);
