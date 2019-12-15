@@ -301,6 +301,7 @@
                 } 
                 //keep pcb updated
                 this.updatePCB();
+                
                 _RoundRobinCounter++;
                 if(_RoundRobinCounter > _DefaultQuantum){
                     _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
