@@ -88,6 +88,9 @@ var TSOS;
             //Kill all
             sc = new TSOS.ShellCommand(this.shellKillAll, "killall", "- Kills all PIDS");
             this.commandList[this.commandList.length] = sc;
+            //RR on
+            sc = new TSOS.ShellCommand(this.shellRRon, "rr", "- <on | off> - Turns the RR scheduling on or off.");
+            this.commandList[this.commandList.length] = sc;
             //Quantum
             sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "- Select a quantum for RR");
             this.commandList[this.commandList.length] = sc;
@@ -292,6 +295,9 @@ var TSOS;
                     case "killall":
                         _StdOut.putText("Kills all process'");
                         break;
+                    case "rr":
+                        _StdOut.putText("<on | off> - Turns the RR scheduling on or off.");
+                        break;
                     case "quantum":
                         _StdOut.putText("Sets quantum for RR'");
                         break;
@@ -468,6 +474,28 @@ var TSOS;
         Shell.prototype.shellKill = function (args) {
         };
         Shell.prototype.shellKillAll = function () {
+        };
+        Shell.prototype.shellRRon = function (args) {
+            if (args.length > 0) {
+                var setting = args[0];
+                switch (setting) {
+                    case "on":
+                        _TurnOnRR = true;
+                        _StdOut.putText("Round Robin scheduling has been turned on.");
+                        console.log(_TurnOnRR);
+                        break;
+                    case "off":
+                        _TurnOnRR = false;
+                        _StdOut.putText("Round Robin scheduling has been turned off.");
+                        console.log(_TurnOnRR);
+                        break;
+                    default:
+                        _StdOut.putText("Invalid arguement.  Usage: RR <on | off>.");
+                }
+            }
+            else {
+                _StdOut.putText("Usage: rr <on | off>");
+            }
         };
         Shell.prototype.shellQuantum = function (args) {
             if (args.length > 0) {

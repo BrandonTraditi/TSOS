@@ -82,6 +82,7 @@ var _Loaded: boolean = true;
 var _DefaultQuantum: number = 6;
 var _CpuScheduler: TSOS.cpuScheduler;
 var _RoundRobinCounter: number = 0;
+var _TurnOnRR: boolean = false;
 
 var onDocumentLoad = function() {
 	TSOS.Control.hostInit();

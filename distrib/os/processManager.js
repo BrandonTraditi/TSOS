@@ -44,7 +44,8 @@ var TSOS;
                 //console.log("Wait queue ", this.waitQueue);
                 //console.log("Wait Queue Size: ", this.waitQueue.getSize());
                 //console.log("process array: ", this.processArray);
-                _Control.pcbUpdate(pcb);
+                _Control.pcbAdd(pcb);
+                _Control.memoryUpdate();
             }
             else {
                 _StdOut.putText("Memory is full.");
@@ -55,7 +56,7 @@ var TSOS;
                 //this.readyQueue.enqueue(pcb);
                 pcb.state = "Running";
                 _CPU.loadProgram(pcb);
-                _CPU.isExecuting = true;
+                _Control.cpuUpdate();
                 //Debugging
                 //console.log("Run Process pcb: ", pcb);
                 //console.log("Ready queue: ", this.readyQueue);

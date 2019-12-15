@@ -24,9 +24,9 @@ var TSOS;
             //console.log("Temp Queue: ", tempQueue);
             if (_ProcessManager.readyQueue.getSize() > 0) {
                 this.nextPCB.state = "Running";
-                _RoundRobinCounter = 0;
+                //_RoundRobinCounter = 0;
                 _CPU.loadProgram(this.nextPCB);
-                _ProcessManager.readyQueue.enqueue(pcb);
+                //_ProcessManager.readyQueue.enqueue(pcb);
                 console.log("ReInitalize Ready Queue: ", _ProcessManager.readyQueue);
             }
             _CPU.isExecuting = true;

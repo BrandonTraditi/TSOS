@@ -305,11 +305,12 @@
                 this.updatePCB();
                 _Control.cpuUpdate();
                 _Control.memoryUpdate();
+                _Control.pcbUpdate(this.currentPCB);
 
                 _RoundRobinCounter++;
 
                 if(_TurnOnRR == true){
-                    if(_RoundRobinCounter > _DefaultQuantum){
+                    if(_RoundRobinCounter == _DefaultQuantum){
                     _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
                 }
             }

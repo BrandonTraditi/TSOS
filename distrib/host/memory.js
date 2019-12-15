@@ -50,7 +50,7 @@ var TSOS;
             for (var i = 0; i < program.length; i++) {
                 this.writeByte(partition, i, program[i]);
             }
-            //Control.memoryUpdate();
+            _Control.memoryUpdate();
         };
         //clears all memory
         Memory.prototype.clearMemory = function () {

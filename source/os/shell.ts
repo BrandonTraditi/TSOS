@@ -155,8 +155,8 @@ module TSOS {
 
             //RR on
              sc = new ShellCommand(this.shellRRon,
-                                "rrOn",
-                                "- Turns on RR scheduling");
+                                "rr",
+                                "- <on | off> - Turns the RR scheduling on or off.");
              this.commandList[this.commandList.length] = sc;            
 
             //Quantum
@@ -377,8 +377,8 @@ module TSOS {
                     case "killall":
                         _StdOut.putText("Kills all process'");
                         break;
-                    case "rrOn":
-                        _StdOut.putText("Turns on RR scheduling'");
+                    case "rr":
+                        _StdOut.putText("<on | off> - Turns the RR scheduling on or off.");
                         break;
                     case "quantum":
                         _StdOut.putText("Sets quantum for RR'")
@@ -572,8 +572,26 @@ module TSOS {
         public shellKillAll(){
 
         }
-        public shellRRon(){
-            _TurnOnRR = true;
+        public shellRRon(args){
+            if (args.length > 0) {
+                var setting = args[0];
+                switch (setting) {
+                    case "on":
+                        _TurnOnRR = true;
+                        _StdOut.putText("Round Robin scheduling has been turned on.");
+                        console.log(_TurnOnRR);
+                        break;
+                    case "off":
+                        _TurnOnRR = false;
+                        _StdOut.putText("Round Robin scheduling has been turned off.");
+                        console.log(_TurnOnRR);
+                        break;
+                    default:
+                        _StdOut.putText("Invalid arguement.  Usage: RR <on | off>.");
+                }
+            } else {
+                _StdOut.putText("Usage: rr <on | off>");
+            }
         }
 
         public shellQuantum(args){

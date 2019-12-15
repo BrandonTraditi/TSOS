@@ -61,6 +61,7 @@ table, th, td{
   position: absolute;
   color:black;
   background-color: white;
+  overflow-y: scroll;
 }
 
 h2 {

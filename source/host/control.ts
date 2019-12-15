@@ -1,7 +1,8 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
-///<reference path="memory.ts" />
+///<reference path="../host/memory.ts" />
 ///<reference path="../os/memoryManager.ts" />
+///<reference path="../host/devices.ts" />
 
 /* ------------
      Control.ts
@@ -151,13 +152,13 @@ module TSOS {
 
         }
 
-        public pcbUpdate(pcb: PCB){
+        public pcbAdd(pcb: PCB){
             let table = (<HTMLTableElement>document.getElementById("pcbTable"));
 
             if (_PID == 0) {
                table.deleteRow(1);
             }
-   
+
             let row = table.insertRow();
             //pid
             row.insertCell(0).innerHTML = pcb.pid.toString();
@@ -179,6 +180,27 @@ module TSOS {
             row.insertCell(8).innerHTML = pcb.z.toString();            
 
         }
+
+        public pcbUpdate(pcb: PCB): void {
+            if (pcb.state != "Terminated") {
+               let table = <HTMLTableElement>document.getElementById("pcbTable");
+               let tableLength = table.rows.length;
+               for (let i = 0; i < tableLength; i++) {
+                  let row = table.rows[i].cells;
+                  if (parseInt(row[0].innerHTML) == pcb.pid) {
+                     row[1].innerHTML = pcb.state;
+                     row[2].innerHTML = pcb.programCounter.toString();
+                     row[3].innerHTML = pcb.accumulator.toString();
+                     row[4].innerHTML = pcb.instructionReg;
+                     row[5].innerHTML = pcb.location;
+                     row[6].innerHTML = pcb.x.toString();
+                     row[7].innerHTML = pcb.y.toString();
+                     row[8].innerHTML = pcb.z.toString();
+                     break;
+                  }
+               }
+            }
+         }
 
       public memoryUpdate(){
             var table = (<HTMLTableElement>document.getElementById("memoryTable"));

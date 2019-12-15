@@ -1,7 +1,8 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
-///<reference path="memory.ts" />
+///<reference path="../host/memory.ts" />
 ///<reference path="../os/memoryManager.ts" />
+///<reference path="../host/devices.ts" />
 /* ------------
      Control.ts
 
@@ -90,6 +91,7 @@ var TSOS;
             _Kernel = new TSOS.Kernel();
             _Kernel.krnBootstrap(); // _GLaDOS.afterStartup() will get called in there, if configured.
             TSOS.Utils.statusUpdate("Host Online");
+            _Control.memoryUpdate();
         };
         Control.hostBtnHaltOS_click = function (btn) {
             Control.hostLog("Emergency halt", "host");
@@ -107,7 +109,24 @@ var TSOS;
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         };
-        Control.prototype.pcbUpdate = function (pcb) {
+        Control.prototype.cpuUpdate = function () {
+            var table = document.getElementById("cpuTable");
+            table.deleteRow(1);
+            var row = table.insertRow(1);
+            // PC
+            row.insertCell(0).innerHTML = _CPU.currentPCB.programCounter.toString();
+            // ACC
+            row.insertCell(1).innerHTML = _CPU.currentPCB.accumulator.toString();
+            // IR
+            row.insertCell(2).innerHTML = _CPU.currentPCB.instructionReg;
+            // x
+            row.insertCell(3).innerHTML = _CPU.currentPCB.x.toString();
+            // y
+            row.insertCell(4).innerHTML = _CPU.currentPCB.y.toString();
+            // z
+            row.insertCell(5).innerHTML = _CPU.currentPCB.z.toString();
+        };
+        Control.prototype.pcbAdd = function (pcb) {
             var table = document.getElementById("pcbTable");
             if (_PID == 0) {
                 table.deleteRow(1);
@@ -131,6 +150,48 @@ var TSOS;
             row.insertCell(7).innerHTML = pcb.y.toString();
             // z
             row.insertCell(8).innerHTML = pcb.z.toString();
+        };
+        Control.prototype.pcbUpdate = function (pcb) {
+            if (pcb.state != "Terminated") {
+                var table = document.getElementById("pcbTable");
+                var tableLength = table.rows.length;
+                for (var i = 0; i < tableLength; i++) {
+                    var row = table.rows[i].cells;
+                    if (parseInt(row[0].innerHTML) == pcb.pid) {
+                        row[1].innerHTML = pcb.state;
+                        row[2].innerHTML = pcb.programCounter.toString();
+                        row[3].innerHTML = pcb.accumulator.toString();
+                        row[4].innerHTML = pcb.instructionReg;
+                        row[5].innerHTML = pcb.location;
+                        row[6].innerHTML = pcb.x.toString();
+                        row[7].innerHTML = pcb.y.toString();
+                        row[8].innerHTML = pcb.z.toString();
+                        break;
+                    }
+                }
+            }
+        };
+        Control.prototype.memoryUpdate = function () {
+            var table = document.getElementById("memoryTable");
+            table.innerHTML = "";
+            var index = 0;
+            for (var i = 0; i < _MemorySize; i += 8) {
+                // create a new row
+                var hex = i.toString(16);
+                if (hex.length == 1) {
+                    hex = "0" + hex;
+                }
+                if (hex.length == 2) {
+                    hex = "00" + hex;
+                }
+                var newRow = table.insertRow(i / 8);
+                newRow.insertCell(0).innerHTML = "0X" + hex;
+                for (var j = 1; j < 9; j++) {
+                    // create a new cell
+                    newRow.insertCell(j).innerHTML = _Memory.memory[index];
+                    index++;
+                }
+            }
         };
         return Control;
     }());
