@@ -54,6 +54,7 @@ var _MemoryManager;
 var _ProcessManager;
 var _PID = -1;
 var _Memory;
+var _Memory;
 var _MemorySize = 768;
 var _MemoryPartitionSize = 256;
 var OutputArray = ["Your output: "];

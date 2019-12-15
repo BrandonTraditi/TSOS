@@ -1,15 +1,17 @@
 ///<reference path="../globals.ts" />
-///<reference path="../host/memory.ts" />
 var TSOS;
 (function (TSOS) {
-    var memoryAccessor = /** @class */ (function () {
-        function memoryAccessor() {
-            this.memory = _Memory.memory;
+    var Memory = /** @class */ (function () {
+        function Memory(memory) {
+            if (memory === void 0) { memory = []; }
+            this.memory = memory;
         }
-        memoryAccessor.prototype.init = function () {
+        ;
+        Memory.prototype.init = function () {
+            this.memory = _Memory.memory;
         };
         // read memory block in particular partition 
-        memoryAccessor.prototype.readMemory = function (partition, PC) {
+        Memory.prototype.readMemory = function (partition, PC) {
             var location = PC;
             if (partition == 1) {
                 location += 256;
@@ -17,10 +19,10 @@ var TSOS;
             if (partition == 2) {
                 location += 512;
             }
-            return _Memory.memory[location];
+            return this.memory[location];
         };
         //slice location to get the block of the program
-        memoryAccessor.prototype.getProgram = function (partition, PC) {
+        Memory.prototype.getProgram = function (partition, PC) {
             var location = PC;
             if (partition == 1) {
                 location += 256;
@@ -28,9 +30,9 @@ var TSOS;
             if (partition == 2) {
                 location += 512;
             }
-            return _Memory.memory.slice(location, location + 255);
+            return this.memory.slice(location, location + 255);
         };
-        return memoryAccessor;
+        return Memory;
     }());
-    TSOS.memoryAccessor = memoryAccessor;
+    TSOS.Memory = Memory;
 })(TSOS || (TSOS = {}));

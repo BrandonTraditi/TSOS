@@ -444,6 +444,7 @@ var TSOS;
         };
         Shell.prototype.shellRunAll = function () {
             console.log("runall initiated");
+            _TurnOnRR = true;
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ROUNDROBIN_IRQ, 0));
             /*while(_ProcessManager.processArray.length > 0){
                 var pcbRun: PCB = null;
@@ -481,6 +482,7 @@ var TSOS;
                 _StdOut.putText("All Memory partitions cleared. ");
             }
             console.log(_Memory.memory);
+            _Control.memoryUpdate();
         };
         Shell.prototype.shellPS = function () {
             for (var i = 0; i < _ProcessManager.processArray.length; i++) {

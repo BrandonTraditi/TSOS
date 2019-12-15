@@ -260,7 +260,7 @@ var TSOS;
                 else if (this.instruction == "00") {
                     //break program
                     this.ProgramCounter++;
-                    this.currentPCB.state = "done";
+                    this.currentPCB.state = "Ran";
                     this.isExecuting = false;
                     var out = OutputArray.join("");
                     _StdOut.putText(out);

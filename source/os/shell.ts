@@ -571,6 +571,7 @@ module TSOS {
                 _StdOut.putText("All Memory partitions cleared. ");
             }
             console.log(_Memory.memory);
+            _Control.memoryUpdate();
         }
 
         public shellPS() {

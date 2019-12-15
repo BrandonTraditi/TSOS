@@ -36,6 +36,7 @@ var TSOS;
             _Memory.init();
             _MemoryManager = new TSOS.memoryManager();
             _ProcessManager = new TSOS.ProcessManager();
+            //_Memory = new Memory();
             _CpuScheduler = new TSOS.cpuScheduler();
             _Control = new TSOS.Control();
             // Load the Keyboard Device Driver
