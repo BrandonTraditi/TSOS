@@ -108,6 +108,8 @@ module TSOS {
             _Kernel = new Kernel();
             _Kernel.krnBootstrap();  // _GLaDOS.afterStartup() will get called in there, if configured.
             Utils.statusUpdate("Host Online");
+
+            _Control.memoryUpdate();
         }
 
         public static hostBtnHaltOS_click(btn): void {
@@ -126,6 +128,27 @@ module TSOS {
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
+        }
+        
+        public cpuUpdate(){
+            let table = (<HTMLTableElement>document.getElementById("cpuTable"));
+            
+            table.deleteRow(1);
+   
+            let row = table.insertRow(1);
+            // PC
+            row.insertCell(0).innerHTML = _CPU.currentPCB.programCounter.toString();
+            // ACC
+            row.insertCell(1).innerHTML = _CPU.currentPCB.accumulator.toString();
+            // IR
+            row.insertCell(2).innerHTML = _CPU.currentPCB.instructionReg;
+            // x
+            row.insertCell(3).innerHTML = _CPU.currentPCB.x.toString();
+            // y
+            row.insertCell(4).innerHTML = _CPU.currentPCB.y.toString();
+            // z
+            row.insertCell(5).innerHTML = _CPU.currentPCB.z.toString();            
+
         }
 
         public pcbUpdate(pcb: PCB){
@@ -153,29 +176,33 @@ module TSOS {
             // y
             row.insertCell(7).innerHTML = pcb.y.toString();
             // z
-            row.insertCell(8).innerHTML = pcb.z.toString();
-
-            
+            row.insertCell(8).innerHTML = pcb.z.toString();            
 
         }
 
-      /*public static memoryUpdate(){
-            var array = _Memory.memory;
-            var table = (<HTMLTableElement>document.getElementById("memory"));
+      public memoryUpdate(){
+            var table = (<HTMLTableElement>document.getElementById("memoryTable"));
+            table.innerHTML = "";
+            var index = 0;
 
-            for(var i = 0; i < _Memory.memory.length; i++)
-            {
+            for(var i = 0; i < _MemorySize; i += 8){
                 // create a new row
-                var newRow = table.insertRow(array.length);
-                for(var j = 0; j < _Memory.memory[i].length; j++)
-                {
+                var hex = i.toString(16);
+                if(hex.length == 1){
+                    hex = "0" + hex; 
+                }
+                if(hex.length == 2){
+                    hex = "00" + hex;
+                }
+
+                var newRow = table.insertRow(i/8);
+                newRow.insertCell(0).innerHTML = "0X" + hex;
+                for(var j = 1; j < 9; j++ ){
                     // create a new cell
-                    var cell = newRow.insertCell(j);
-                    
-                    // add value to the cell
-                    cell.innerHTML = _Memory.memory[i][j];
+                    newRow.insertCell(j).innerHTML = _Memory.memory[index];
+                    index++;
                 }
             }
-        }*/
+        }
     }
 }
