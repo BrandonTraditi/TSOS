@@ -153,6 +153,12 @@ module TSOS {
                                  "- Kills all PIDS");
             this.commandList[this.commandList.length] = sc;
 
+            //RR on
+             sc = new ShellCommand(this.shellRRon,
+                                "rrOn",
+                                "- Turns on RR scheduling");
+             this.commandList[this.commandList.length] = sc;            
+
             //Quantum
             sc = new ShellCommand(this.shellQuantum,
                                  "quantum",
@@ -371,6 +377,9 @@ module TSOS {
                     case "killall":
                         _StdOut.putText("Kills all process'");
                         break;
+                    case "rrOn":
+                        _StdOut.putText("Turns on RR scheduling'");
+                        break;
                     case "quantum":
                         _StdOut.putText("Sets quantum for RR'")
                         break;
@@ -562,6 +571,9 @@ module TSOS {
 
         public shellKillAll(){
 
+        }
+        public shellRRon(){
+            _TurnOnRR = true;
         }
 
         public shellQuantum(args){

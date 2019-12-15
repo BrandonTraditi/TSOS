@@ -41,10 +41,12 @@
                 this.ProgramCounter = this.currentPCB.programCounter; 
                 this.instruction = this.currentPCB.instructionReg;
                 this.Acc = this.currentPCB.accumulator;
+                this.partitionIndex = this.currentPCB.partitionIndex;
                 this.Xreg = this.currentPCB.x;
                 this.Yreg = this.currentPCB.y; 
                 this.Zflag = this.currentPCB.z;
                 
+                _RoundRobinCounter = 0;
                 this.isExecuting = true;
                 
 
@@ -301,11 +303,16 @@
                 } 
                 //keep pcb updated
                 this.updatePCB();
-                
+                _Control.cpuUpdate();
+                _Control.memoryUpdate();
+
                 _RoundRobinCounter++;
-                if(_RoundRobinCounter > _DefaultQuantum){
+
+                if(_TurnOnRR == true){
+                    if(_RoundRobinCounter > _DefaultQuantum){
                     _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
                 }
+            }
                 /*
                 console.log("Quantum COunter: ", _RoundRobinCounter);
                 console.log("Default Quantum: ", _DefaultQuantum);*/
