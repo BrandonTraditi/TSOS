@@ -128,6 +128,37 @@ module TSOS {
             // page from its cache, which is not what we want.
         }
 
+        public pcbUpdate(pcb: PCB){
+            let table = (<HTMLTableElement>document.getElementById("pcbTable"));
+
+            if (_PID == 0) {
+               table.deleteRow(1);
+            }
+   
+            let row = table.insertRow();
+            //pid
+            row.insertCell(0).innerHTML = pcb.pid.toString();
+            // state
+            row.insertCell(1).innerHTML = pcb.state;
+            // pc
+            row.insertCell(2).innerHTML = pcb.programCounter.toString();
+            // acc
+            row.insertCell(3).innerHTML = pcb.accumulator.toString();
+            //IR
+            row.insertCell(4).innerHTML = pcb.instructionReg;
+            // location
+            row.insertCell(5).innerHTML = pcb.location;
+            // x
+            row.insertCell(6).innerHTML = pcb.x.toString();
+            // y
+            row.insertCell(7).innerHTML = pcb.y.toString();
+            // z
+            row.insertCell(8).innerHTML = pcb.z.toString();
+
+            
+
+        }
+
       /*public static memoryUpdate(){
             var array = _Memory.memory;
             var table = (<HTMLTableElement>document.getElementById("memory"));

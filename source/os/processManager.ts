@@ -47,6 +47,8 @@ module TSOS{
                 //console.log("Wait Queue Size: ", this.waitQueue.getSize());
                 //console.log("process array: ", this.processArray);
                 
+                _Control.pcbUpdate(pcb);
+                
             }else{
                 _StdOut.putText("Memory is full.");
             }
