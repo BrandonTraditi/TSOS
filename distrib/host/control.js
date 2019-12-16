@@ -110,6 +110,7 @@ var TSOS;
             // page from its cache, which is not what we want.
         };
         Control.prototype.cpuUpdate = function () {
+            //Get cpu table
             var table = document.getElementById("cpuTable");
             table.deleteRow(1);
             var row = table.insertRow(1);
@@ -127,10 +128,13 @@ var TSOS;
             row.insertCell(5).innerHTML = _CPU.currentPCB.z.toString();
         };
         Control.prototype.pcbAdd = function (pcb) {
+            //Get pcb Table
             var table = document.getElementById("pcbTable");
+            //If its the first pcb delete the first "example row"
             if (_PID == 0) {
                 table.deleteRow(1);
             }
+            //Get a new row and insert data
             var row = table.insertRow();
             //pid
             row.insertCell(0).innerHTML = pcb.pid.toString();
@@ -151,7 +155,9 @@ var TSOS;
             // z
             row.insertCell(8).innerHTML = pcb.z.toString();
         };
+        //still working 
         Control.prototype.pcbUpdate = function (pcb) {
+            //if pcb is not terminated we update that row
             if (pcb.state != "Terminated") {
                 var table = document.getElementById("pcbTable");
                 var tableLength = table.rows.length;
@@ -172,11 +178,12 @@ var TSOS;
             }
         };
         Control.prototype.memoryUpdate = function () {
+            //Get table
             var table = document.getElementById("memoryTable");
             table.innerHTML = "";
             var index = 0;
             for (var i = 0; i < _MemorySize; i += 8) {
-                // create a new row
+                // create a new row ands add 0 or 00 where necessary
                 var hex = i.toString(16);
                 if (hex.length == 1) {
                     hex = "0" + hex;
@@ -184,6 +191,7 @@ var TSOS;
                 if (hex.length == 2) {
                     hex = "00" + hex;
                 }
+                //need to account for the first column in the row
                 var newRow = table.insertRow(i / 8);
                 newRow.insertCell(0).innerHTML = "0X" + hex;
                 for (var j = 1; j < 9; j++) {

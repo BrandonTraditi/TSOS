@@ -77,8 +77,8 @@ var TSOS;
                 _CPU.loadProgram(pcb);
                 //Update the HTML table
                 _Control.cpuUpdate();
-                _TurnOnRR = true;
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ROUNDROBIN_IRQ, 0));
+                //_TurnOnRR = true;
+                //_KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
                 /*
                 console.log("runall is true");
                 console.log("Array Size: ", this.residentList.length);

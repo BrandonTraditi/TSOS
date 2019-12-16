@@ -555,6 +555,7 @@ module TSOS {
                 _ProcessManager.runAll = true;
                 pcbRun = _ProcessManager.readyQueue.dequeue();
                 _ProcessManager.runProcess(pcbRun);
+                console.log(pcbRun);
             }
 
         }

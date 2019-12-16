@@ -463,10 +463,10 @@ var TSOS;
             console.log("runall initiated");
             var pcbRun = null;
             while (_ProcessManager.readyQueue.getSize() > 0) {
-                var pcbRun = null;
                 _ProcessManager.runAll = true;
                 pcbRun = _ProcessManager.readyQueue.dequeue();
                 _ProcessManager.runProcess(pcbRun);
+                console.log(pcbRun);
             }
         };
         Shell.prototype.shellClearMem = function (args) {
@@ -500,7 +500,7 @@ var TSOS;
             for (var i = 0; i < _ProcessManager.residentList.length; i++) {
                 var pidPA = _ProcessManager.residentList[i].pid;
                 var pidState = _ProcessManager.residentList[i].state;
-                _StdOut.putText("PID: " + pidPA + "With a state of " + pidState);
+                _StdOut.putText("PID: " + pidPA + " With a state of " + pidState);
                 _Console.advanceLine();
             }
         };
