@@ -132,6 +132,7 @@ module TSOS {
         }
         
         public cpuUpdate(){
+            //Get cpu table
             let table = (<HTMLTableElement>document.getElementById("cpuTable"));
             
             table.deleteRow(1);
@@ -153,12 +154,13 @@ module TSOS {
         }
 
         public pcbAdd(pcb: PCB){
+            //Get pcb Table
             let table = (<HTMLTableElement>document.getElementById("pcbTable"));
-
+            //If its the first pcb delete the first "example row"
             if (_PID == 0) {
                table.deleteRow(1);
             }
-
+            //Get a new row and insert data
             let row = table.insertRow();
             //pid
             row.insertCell(0).innerHTML = pcb.pid.toString();
@@ -181,7 +183,9 @@ module TSOS {
 
         }
 
+        //still working 
         public pcbUpdate(pcb: PCB): void {
+            //if pcb is not terminated we update that row
             if (pcb.state != "Terminated") {
                let table = <HTMLTableElement>document.getElementById("pcbTable");
                let tableLength = table.rows.length;
@@ -203,12 +207,13 @@ module TSOS {
          }
 
       public memoryUpdate(){
+          //Get table
             var table = (<HTMLTableElement>document.getElementById("memoryTable"));
             table.innerHTML = "";
             var index = 0;
 
             for(var i = 0; i < _MemorySize; i += 8){
-                // create a new row
+                // create a new row ands add 0 or 00 where necessary
                 var hex = i.toString(16);
                 if(hex.length == 1){
                     hex = "0" + hex; 
@@ -216,7 +221,7 @@ module TSOS {
                 if(hex.length == 2){
                     hex = "00" + hex;
                 }
-
+                //need to account for the first column in the row
                 var newRow = table.insertRow(i/8);
                 newRow.insertCell(0).innerHTML = "0X" + hex;
                 for(var j = 1; j < 9; j++ ){

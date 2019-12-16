@@ -552,7 +552,6 @@ module TSOS {
             console.log("runall initiated");
             var pcbRun: any = null;
             while(_ProcessManager.readyQueue.getSize() > 0){
-                var pcbRun: any = null;
                 _ProcessManager.runAll = true;
                 pcbRun = _ProcessManager.readyQueue.dequeue();
                 _ProcessManager.runProcess(pcbRun);
