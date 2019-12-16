@@ -30,13 +30,17 @@ module TSOS{
         }
         //uses writebyte to write whole program 
         public write(partition: number, program): void{
-
+            //Make sure program is not over 256
+            if(program.length > 256){
+                _StdOut.putText("Sorry this program is too big.");
+            }else{
             //for loop that will use write byte to input each op code into memory
             for(let i = 0; i < program.length; i++){
                 this.writeByte(partition, i, program[i]);
             }
             //Update memory HTML 
             _Control.memoryUpdate();
+        }
 
         }
         //clears all memory

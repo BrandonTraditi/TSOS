@@ -27,12 +27,18 @@ var TSOS;
         };
         //uses writebyte to write whole program 
         Memory.prototype.write = function (partition, program) {
-            //for loop that will use write byte to input each op code into memory
-            for (var i = 0; i < program.length; i++) {
-                this.writeByte(partition, i, program[i]);
+            //Make sure program is not over 256
+            if (program.length > 256) {
+                _StdOut.putText("Sorry this program is too big.");
             }
-            //Update memory HTML 
-            _Control.memoryUpdate();
+            else {
+                //for loop that will use write byte to input each op code into memory
+                for (var i = 0; i < program.length; i++) {
+                    this.writeByte(partition, i, program[i]);
+                }
+                //Update memory HTML 
+                _Control.memoryUpdate();
+            }
         };
         //clears all memory
         Memory.prototype.clearMemory = function () {
