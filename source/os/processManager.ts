@@ -78,14 +78,20 @@ module TSOS{
                 //_CPU.isExecuting = true;
 
             }else{
+                //Set the pcb state from ready to running
+                pcb.state = "Running";
+                //load the pcb to the cpu 
+                _CPU.loadProgram(pcb);
+                //Update the HTML table
+                _Control.cpuUpdate();  
+
+                //_TurnOnRR = true;
+                //_KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
                 /*
                 console.log("runall is true");
                 console.log("Array Size: ", this.residentList.length);
                 console.log("Proccess array: ", this.residentList);
-
-                for(var i; i < this.residentList.length; i++){
-                    var pcbRun = this.residentList[i];
-                    _CPU.loadProgram(pcbRun);*/
+                */
                 }
             }
         }

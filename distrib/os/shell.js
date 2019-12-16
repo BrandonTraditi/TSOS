@@ -499,7 +499,8 @@ var TSOS;
         Shell.prototype.shellPS = function () {
             for (var i = 0; i < _ProcessManager.residentList.length; i++) {
                 var pidPA = _ProcessManager.residentList[i].pid;
-                _StdOut.putText("PID: " + pidPA);
+                var pidState = _ProcessManager.residentList[i].state;
+                _StdOut.putText("PID: " + pidPA + "With a state of " + pidState);
                 _Console.advanceLine();
             }
         };

@@ -343,9 +343,11 @@
                         
                     //Break program 
                     }else if(this.instruction == "00"){
-                        
+
                       //Set the pcb state to terminated as it is done running
                       this.currentPCB.state = "Terminated";  
+                      //take off ready queue
+                      _ProcessManager.readyQueue.dequeue();
                       //Increment program counter
                       this.ProgramCounter++;
                       //stop executing
@@ -356,7 +358,7 @@
                       _StdOut.putText(out);
                       _Console.advanceLine();
                       _OsShell.putPrompt();
-
+                      this.updatePCB();
                       //Update Pcb
                       _Control.pcbUpdate(this.currentPCB);
     
