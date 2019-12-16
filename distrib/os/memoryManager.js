@@ -1,27 +1,13 @@
 ///<reference path="../globals.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 var TSOS;
 (function (TSOS) {
     var memoryManager = /** @class */ (function () {
         function memoryManager(partitions) {
             if (partitions === void 0) { partitions = [
-                {
-                    available: true,
-                    index: 0,
-                    base: 0,
-                    limit: 255
-                },
-                {
-                    available: true,
-                    index: 1,
-                    base: 256,
-                    limit: 511
-                },
-                {
-                    available: true,
-                    index: 2,
-                    base: 512,
-                    limit: 767
-                }
+                { available: true, index: 0, base: 0, limit: 255 },
+                { available: true, index: 1, base: 256, limit: 511 },
+                { available: true, index: 2, base: 512, limit: 767 }
             ]; }
             this.partitions = partitions;
         }

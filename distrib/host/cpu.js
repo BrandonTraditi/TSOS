@@ -1,5 +1,6 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/cpuScheduler.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 /* ------------
      CPU.ts
      Requires global.ts.
@@ -73,7 +74,7 @@ var TSOS;
                 // TODO: Accumulate CPU usage and profiling statistics here.
                 // Do the real work here. Be sure to set this.isExecuting appropriately.
                 //get instruction
-                var currentInstruction = _Memory.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
+                var currentInstruction = _MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter).toUpperCase();
                 this.instruction = currentInstruction.toString();
                 //OutputArray = ["Your output: "];
                 //Debugging
@@ -95,8 +96,8 @@ var TSOS;
                     //load acc with a constant
                     var nextHex_1 = this.ProgramCounter + 1;
                     //console.log("next hex: ", nextHex);
-                    //console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
-                    this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, nextHex_1), 16);
+                    //console.log("Next hex value: ", parseInt(_MemoryAccessor.readMemory(this.partitionIndex, nextHex), 16));
+                    this.Acc = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, nextHex_1), 16);
                     //console.log("Acc: ", this.Acc);
                     this.ProgramCounter += 2;
                     //debugging 
@@ -106,8 +107,8 @@ var TSOS;
                 }
                 else if (this.instruction == "AD") {
                     //load acc from memory
-                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
-                    this.Acc = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
+                    var hex = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    this.Acc = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, hex), 16);
                     this.ProgramCounter += 3;
                     //debugging
                     //console.log("AD ran: ", this.currentPCB); 
@@ -117,7 +118,7 @@ var TSOS;
                 }
                 else if (this.instruction == "8D") {
                     //store acc in memory
-                    var hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    var hexDec = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     _Memory.writeByte(this.partitionIndex, hexDec, this.Acc.toString(16));
                     this.ProgramCounter += 3;
                     //console.log("Hex value: ", hexDec);//8D = 141
@@ -126,8 +127,8 @@ var TSOS;
                 }
                 else if (this.instruction == "6D") {
                     //add contents from address to acc 
-                    var hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
-                    this.Acc += parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
+                    var hexDec = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    this.Acc += parseInt(_MemoryAccessor.readMemory(this.partitionIndex, hexDec), 16);
                     this.ProgramCounter += 3;
                     //console.log("Hex decimal: ", hexDec); //6D = 109
                     //console.log("Memory array: ", _Memory.memory);
@@ -138,38 +139,38 @@ var TSOS;
                     //console.log("this.ProgramCounter: ", this.ProgramCounter);
                     var nextHex = this.ProgramCounter + 1;
                     //console.log("next hex: ", nextHex);
-                    //console.log("Next hex value: ", parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16));
-                    this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, nextHex), 16);
+                    //console.log("Next hex value: ", parseInt(_MemoryAccessor.readMemory(this.partitionIndex, nextHex), 16));
+                    this.Xreg = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, nextHex), 16);
                     this.ProgramCounter += 2;
                     //console.log("Xreg value: ", this.Xreg);//A2 = 162 
                 }
                 else if (this.instruction == "AE") {
                     //load x reg from memory
-                    var xMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
-                    this.Xreg = parseInt(_Memory.readMemory(this.partitionIndex, xMem), 16);
+                    var xMem = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    this.Xreg = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, xMem), 16);
                     this.ProgramCounter += 3;
                     //console.log("xMem: ", xMem);//AE = 174
                     //console.log("Xreg value: ", this.Xreg);
                 }
                 else if (this.instruction == "A0") {
                     //load y reg with constant
-                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    this.Yreg = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                     this.ProgramCounter += 2;
                     //console.log("Yreg value: ", this.Yreg);//A0 = 160
                 }
                 else if (this.instruction == "AC") {
                     //load y reg from memory
-                    var yMem = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
-                    this.Yreg = parseInt(_Memory.readMemory(this.partitionIndex, yMem), 16);
+                    var yMem = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    this.Yreg = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, yMem), 16);
                     this.ProgramCounter += 3;
                     //console.log("yMem: ", yMem);//AC = 172
                     //console.log("Yreg value: ", this.Yreg);
                 }
                 else if (this.instruction == "EC") {
                     //compare byte at address to x reg, set z flag
-                    //console.log("HexIndex: ", _Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1));
-                    var hex = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
-                    var byte = parseInt(_Memory.readMemory(this.partitionIndex, hex), 16);
+                    //console.log("HexIndex: ", _MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1));
+                    var hex = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    var byte = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, hex), 16);
                     //console.log("Hex: ", hex);
                     //console.log("byte: ", byte);
                     //console.log("xReg", this.Xreg);
@@ -188,9 +189,9 @@ var TSOS;
                 }
                 else if (this.instruction == "D0") {
                     //Branch N bytes if z flag = 0
-                    //console.log("Branch index ", parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16));
+                    //console.log("Branch index ", parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16));
                     if (this.Zflag === 0) {
-                        var branchN = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                        var branchN = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
                         var branchPC = this.ProgramCounter + branchN;
                         if (branchPC > _MemoryPartitionSize - 1) {
                             this.ProgramCounter = branchPC - _MemoryPartitionSize;
@@ -210,14 +211,14 @@ var TSOS;
                 }
                 else if (this.instruction == "EE") {
                     //increment byte
-                    var hexDec = parseInt(_Memory.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
-                    var hexLoc = parseInt(_Memory.readMemory(this.partitionIndex, hexDec), 16);
+                    var hexDec = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter + 1), 16);
+                    var hexLoc = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, hexDec), 16);
                     hexLoc++;
                     _Memory.writeByte(this.partitionIndex, hexDec, hexLoc.toString(16));
                     this.ProgramCounter += 3;
                     //console.log("HexDec: ", hexDec);//EE = 238
                     //console.log("HexLoc: ", hexLoc);
-                    //console.log("Memory spot: ", _Memory.readMemory(this.partitionIndex, hexDec));
+                    //console.log("Memory spot: ", _MemoryAccessor.readMemory(this.partitionIndex, hexDec));
                     //console.log(_Memory.memory);
                 }
                 else if (this.instruction == "FF") {
@@ -234,12 +235,12 @@ var TSOS;
                     else if (this.Xreg === 2) {
                         var y = this.Yreg;
                         var output = "";
-                        var opCode = parseInt(_Memory.readMemory(this.partitionIndex, this.Yreg), 16);
+                        var opCode = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, this.Yreg), 16);
                         //console.log("Op code value: ", opCode);
                         while (opCode != 0) {
                             output += String.fromCharCode(opCode);
                             y++;
-                            opCode = parseInt(_Memory.readMemory(this.partitionIndex, y), 16);
+                            opCode = parseInt(_MemoryAccessor.readMemory(this.partitionIndex, y), 16);
                         }
                         console.log("Output: ", output);
                         _StdOut.putText(output);
@@ -270,7 +271,7 @@ var TSOS;
                     console.log(_ProcessManager.processArray.length);
                 }
                 else {
-                    _StdOut.putText("Not an applical instruction: " + _Memory.readMemory(this.partitionIndex, this.ProgramCounter));
+                    _StdOut.putText("Not an applical instruction: " + _MemoryAccessor.readMemory(this.partitionIndex, this.ProgramCounter));
                     this.isExecuting = false;
                 }
             }

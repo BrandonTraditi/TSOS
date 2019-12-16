@@ -584,6 +584,10 @@ module TSOS {
         }
 
         public shellKill(args) {
+            if( args.length > 0){
+                var setting = args[0];
+                
+            }
 
         }
 

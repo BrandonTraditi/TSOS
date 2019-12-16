@@ -72,10 +72,10 @@ var _MemoryManager: TSOS.memoryManager;
 var _ProcessManager: TSOS.ProcessManager;
 var _PID: number = -1;
 var _Memory: TSOS.Memory;
-var _Memory: TSOS.Memory;
 var _MemorySize = 768;
 var _MemoryPartitionSize = 256;
 var OutputArray: any[] = ["Your output: "];
+var _MemoryAccessor: TSOS.MemoryAccessor;
 
 var _Control: TSOS.Control;
 var _SchedAlgo: string = "rr";

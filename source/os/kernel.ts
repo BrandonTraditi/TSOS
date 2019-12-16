@@ -37,10 +37,11 @@ module TSOS {
             _StdOut = _Console;
 
             _Memory = new Memory();
+            _MemoryAccessor = new MemoryAccessor();
+            _MemoryAccessor.init();
             _Memory.init();
             _MemoryManager = new memoryManager();
             _ProcessManager = new ProcessManager();
-            //_Memory = new Memory();
             _CpuScheduler = new cpuScheduler();
             _Control = new Control();
             // Load the Keyboard Device Driver

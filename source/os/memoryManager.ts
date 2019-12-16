@@ -1,31 +1,14 @@
 ///<reference path="../globals.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 
 module TSOS{
     export class memoryManager{
 
         constructor(
-            public partitions = [
-
-                {
-                    available: true,
-                    index: 0,
-                    base: 0,
-                    limit: 255
-                },
-
-                {
-                    available: true,
-                    index: 1,
-                    base: 256,
-                    limit: 511
-                },
-
-                {
-                    available: true,
-                    index: 2,
-                    base: 512,
-                    limit: 767
-                }
+            public partitions = [     
+                {available: true, index: 0, base: 0, limit: 255},
+                {available: true, index: 1, base: 256, limit: 511},
+                {available: true, index: 2, base: 512, limit: 767}
             ]
 
         ){};

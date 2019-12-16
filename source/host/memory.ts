@@ -3,6 +3,7 @@
 module TSOS{
 
     export class Memory{
+
         public memory = [];
 
         public init(): void{
@@ -13,28 +14,6 @@ module TSOS{
                 this.memory[i]= "00";
             }
             
-        }
-        // read memory block in particular partition 
-        public readMemory(partition: number, PC: number): string {
-            let location = PC;
-            if(partition == 1){
-                location += 256;
-            }
-            if(partition == 2){
-                location += 512;
-            }
-            return this.memory[location];
-        }
-        //slice location to get the block of the program
-        public getProgram(partition: number, PC: number){
-            let location = PC;
-            if(partition == 1){
-                location += 256;
-            }
-            if(partition == 2){
-                location += 512;
-            }
-            return this.memory.slice(location, location + 255);
         }
         //used from write funtion to write the block of the program
         public writeByte(partition: number, location: number, byteData: string): void {

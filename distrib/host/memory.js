@@ -14,27 +14,27 @@ var TSOS;
             }
         };
         // read memory block in particular partition 
-        Memory.prototype.readMemory = function (partition, PC) {
-            var location = PC;
-            if (partition == 1) {
+        /*public readMemory(partition: number, PC: number): string {
+            let location = PC;
+            if(partition == 1){
                 location += 256;
             }
-            if (partition == 2) {
+            if(partition == 2){
                 location += 512;
             }
             return this.memory[location];
-        };
+        }
         //slice location to get the block of the program
-        Memory.prototype.getProgram = function (partition, PC) {
-            var location = PC;
-            if (partition == 1) {
+        public getProgram(partition: number, PC: number){
+            let location = PC;
+            if(partition == 1){
                 location += 256;
             }
-            if (partition == 2) {
+            if(partition == 2){
                 location += 512;
             }
             return this.memory.slice(location, location + 255);
-        };
+        }*/
         //used from write funtion to write the block of the program
         Memory.prototype.writeByte = function (partition, location, byteData) {
             if (partition == 1) {

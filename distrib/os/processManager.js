@@ -37,7 +37,7 @@ var TSOS;
                 console.log(this.processArray);
                 pcb.state = "Waiting";
                 //set indtruction registry 
-                pcb.instructionReg = _Memory.readMemory(pcb.partitionIndex, pcb.programCounter);
+                pcb.instructionReg = _MemoryAccessor.readMemory(pcb.partitionIndex, pcb.programCounter);
                 //set location
                 pcb.location = "MEMORY";
                 //used for debugging

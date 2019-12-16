@@ -492,6 +492,9 @@ var TSOS;
             }
         };
         Shell.prototype.shellKill = function (args) {
+            if (args.length > 0) {
+                var setting = args[0];
+            }
         };
         Shell.prototype.shellKillAll = function () {
         };

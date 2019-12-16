@@ -33,10 +33,11 @@ var TSOS;
             _StdIn = _Console;
             _StdOut = _Console;
             _Memory = new TSOS.Memory();
+            _MemoryAccessor = new TSOS.MemoryAccessor();
+            _MemoryAccessor.init();
             _Memory.init();
             _MemoryManager = new TSOS.memoryManager();
             _ProcessManager = new TSOS.ProcessManager();
-            //_Memory = new Memory();
             _CpuScheduler = new TSOS.cpuScheduler();
             _Control = new TSOS.Control();
             // Load the Keyboard Device Driver
