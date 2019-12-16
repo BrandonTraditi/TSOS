@@ -1,7 +1,9 @@
 ///<reference path="../globals.ts" />
 var TSOS;
 (function (TSOS) {
+    //Creates a PCB Framework with all neccessary variables
     var PCB = /** @class */ (function () {
+        //Makes a new pcb with pid inputted
         function PCB(p) {
             this.state = "New";
             this.programCounter = 0;

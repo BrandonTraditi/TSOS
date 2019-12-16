@@ -3,61 +3,66 @@
 var TSOS;
 (function (TSOS) {
     var ProcessManager = /** @class */ (function () {
-        function ProcessManager(waitQueue, readyQueue, processArray, runAll) {
-            if (waitQueue === void 0) { waitQueue = new TSOS.Queue(); }
+        function ProcessManager(
+        //Establish a ready queue for all proccess in memory
+        readyQueue, 
+        //Establish a resident list for all proccesses loaded
+        residentList, 
+        //Runall used for runall command
+        runAll) {
             if (readyQueue === void 0) { readyQueue = new TSOS.Queue(); }
-            if (processArray === void 0) { processArray = new Array(); }
+            if (residentList === void 0) { residentList = new Array(); }
             if (runAll === void 0) { runAll = false; }
-            this.waitQueue = waitQueue;
             this.readyQueue = readyQueue;
-            this.processArray = processArray;
+            this.residentList = residentList;
             this.runAll = runAll;
         }
         ;
-        //public currentPCB: TSOS.PCB;
+        //Creates a new PCB object with inputted program
         ProcessManager.prototype.createProcess = function (program) {
+            //Assign the new PCB a partition of memory
             var partitionIndex = _MemoryManager.getAvailbepartitions();
+            //If there is a parition open. Create the proccess in there.
             if (partitionIndex != -1) {
-                //PID counter
+                //PID counter increments. This should not reset.
                 _PID++;
-                //Create new pcb
+                //Create new pcb with a pid
                 var pcb = new TSOS.PCB(_PID);
-                //Push pcb to process array
-                this.processArray.push(pcb);
-                //after finding available partition, assign it to pcb
+                //Assign the pcb to a memory block
                 pcb.partitionIndex = partitionIndex;
-                //write process to memory with assigned index
+                //Write process to memory with assigned index
                 _MemoryManager.writeProgramToMemory(pcb.partitionIndex, program);
-                //add pcb to wait queue 
-                this.waitQueue.enqueue(pcb);
+                //Add the pcb to the ready queue 
                 this.readyQueue.enqueue(pcb);
-                //this.processArray.push(pcb);
-                console.log(this.waitQueue);
-                console.log(this.readyQueue);
-                console.log(this.processArray);
-                pcb.state = "Waiting";
-                //set indtruction registry 
+                //Add to the resident list
+                this.residentList.push(pcb);
+                //Set the pcb state to ready
+                pcb.state = "Ready";
+                //set indtruction registry
                 pcb.instructionReg = _MemoryAccessor.readMemory(pcb.partitionIndex, pcb.programCounter);
-                //set location
+                //set location.. will always stay in memory for this project
                 pcb.location = "MEMORY";
-                //used for debugging
+                //Debugging
                 //console.log("pcb: ", pcb);
                 //console.log("program: ", program);
-                //console.log("Wait queue ", this.waitQueue);
-                //console.log("Wait Queue Size: ", this.waitQueue.getSize());
-                //console.log("process array: ", this.processArray);
+                //console.log("Resident list: ", this.residentList);
+                //Update the html tables
                 _Control.pcbAdd(pcb);
                 _Control.memoryUpdate();
             }
             else {
+                //If available partition returns -1 then the memory is full.
                 _StdOut.putText("Memory is full.");
             }
         };
         ProcessManager.prototype.runProcess = function (pcb) {
+            //If run all is false we just run one program
             if (this.runAll == false) {
-                //this.readyQueue.enqueue(pcb);
+                //Set the pcb state from ready to running
                 pcb.state = "Running";
+                //load the pcb to the cpu 
                 _CPU.loadProgram(pcb);
+                //Update the HTML table
                 _Control.cpuUpdate();
                 //Debugging
                 //console.log("Run Process pcb: ", pcb);
@@ -65,13 +70,14 @@ var TSOS;
                 //_CPU.isExecuting = true;
             }
             else {
+                /*
                 console.log("runall is true");
-                console.log("Array Size: ", this.processArray.length);
-                console.log("Proccess array: ", this.processArray);
-                for (var i; i < this.processArray.length; i++) {
-                    var pcbRun = this.processArray[i];
-                    _CPU.loadProgram(pcbRun);
-                }
+                console.log("Array Size: ", this.residentList.length);
+                console.log("Proccess array: ", this.residentList);
+
+                for(var i; i < this.residentList.length; i++){
+                    var pcbRun = this.residentList[i];
+                    _CPU.loadProgram(pcbRun);*/
             }
         };
         return ProcessManager;

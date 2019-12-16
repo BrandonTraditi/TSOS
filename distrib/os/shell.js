@@ -343,6 +343,7 @@ var TSOS;
                 _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
             }
         };
+        //Runs prompt command
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {
                 _OsShell.promptStr = args[0];
@@ -351,16 +352,20 @@ var TSOS;
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         };
+        //Provides the current date and time to the UI
         Shell.prototype.shellDate = function (args) {
             var d = new Date();
             _StdOut.putText(d.toString());
         };
+        //Runs Where am I command that will output text
         Shell.prototype.shellWhereAmI = function (args) {
             _StdOut.putText("Follow your soul, it knows the way");
         };
+        //Outputs super bowl prediction
         Shell.prototype.shellPrediction = function (args) {
             _StdOut.putText("Superbowl LIV predictions:Patriots 24 - Packers 10");
         };
+        //Command that will update status UI message
         Shell.prototype.shellStatus = function (args) {
             var s = "";
             for (var i = 0; i < args.length; i++) {
@@ -368,16 +373,18 @@ var TSOS;
             }
             TSOS.Utils.statusUpdate(s);
         };
+        //Issues a BSOD 
         Shell.prototype.shellBSOD = function (args) {
             _Kernel.krnTrapError("BSOD has been initalized!");
         };
+        //Loads a program that is inputted to the User Program input
         Shell.prototype.shellLoad = function (args) {
-            //get user input and store in a var to check
+            //get user input and store in a userInput to check for valid code
             var userInput = document.getElementById("taProgramInput").value;
-            //store all valid hex char into array to check user input to
+            //store all valid hex char into array to check against user input to
             var validHex = [" ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
             //if/else for input 
-            if (userInput == "") {
+            if (userInput == " ") {
                 _StdOut.putText("Please input a program. ");
             }
             else {
@@ -392,12 +399,13 @@ var TSOS;
                     }
                 }
             }
-            //split array of Hex into individual codes
+            //split array of Hex to individual op codes. This is if a user inputted commands without spaces. 
             var program = userInput.split(" ");
             //Check if code is valid Hex
             if (counter == userInput.length) {
-                //Alert it is valid and create a new process                 
+                //Create a new process                 
                 _ProcessManager.createProcess(program);
+                //Output that it is a valid input and the PID.
                 if (_Loaded = true) {
                     _StdOut.putText("This is valid hex. Loaded with PID: " + _PID);
                 }
@@ -406,17 +414,23 @@ var TSOS;
                 _StdOut.putText("Program not loaded.");
             }
         };
+        //Runs the process based on pid input
         Shell.prototype.shellRun = function (args) {
+            //Check for valid input 
             if (args.length > 0) {
+                //Establish a variable for the pid based on input
                 var pid = args[0];
+                //Establish a temp queue to use to load proccesses onto while looking for pid
                 var tempQueue = new TSOS.Queue();
+                //Set a pcb that will be ran
                 var pcbRun = null;
+                //If that pcb is in the queue it will be ran
                 var inQueue = false;
-                //Get pcb from wait queue
-                while (_ProcessManager.waitQueue.getSize() > 0) {
-                    //waitPCB is equal to the last section of the waitqueue
-                    var waitPcb = _ProcessManager.waitQueue.dequeue();
-                    //if they match change in queue to true and put the pcb from wait queue into pcbRun
+                //Get pcb from ready queue
+                while (_ProcessManager.readyQueue.getSize() > 0) {
+                    //waitPCB is equal to the first index of the ready Queue
+                    var waitPcb = _ProcessManager.readyQueue.dequeue();
+                    //if the pid's match, change in queue to true and put the pcb from the ready queue into pcbRun
                     if (waitPcb.pid == pid) {
                         pcbRun = waitPcb;
                         inQueue = true;
@@ -426,9 +440,9 @@ var TSOS;
                         tempQueue.enqueue(waitPcb);
                     }
                 }
-                //requeue pcb if put in tempqueue
+                //push pcb if put in tempqueue
                 while (tempQueue.getSize() > 0) {
-                    _ProcessManager.waitQueue.enqueue(tempQueue.dequeue());
+                    _ProcessManager.readyQueue.enqueue(tempQueue.dequeue());
                 }
                 //if pcb is put in queue, run it
                 if (inQueue) {
@@ -437,34 +451,37 @@ var TSOS;
                 else {
                     _StdOut.putText("Pid not found.");
                 }
+                //Argument was invalid
             }
             else {
                 _StdOut.putText("Please supply a Pid");
             }
         };
+        //RunAll command
         Shell.prototype.shellRunAll = function () {
             console.log("runall initiated");
             _TurnOnRR = true;
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ROUNDROBIN_IRQ, 0));
-            /*while(_ProcessManager.processArray.length > 0){
+            /*while(_ProcessManager.residentList.length > 0){
                 var pcbRun: PCB = null;
-                pcbRun = _ProcessManager.processArray.pop();
+                pcbRun = _ProcessManager.residentList.pop();
             }
             _CPU.loadProgram(pcbRun);
-            console.log(_ProcessManager.processArray);
-            console.log(_ProcessManager.processArray.length);
+            console.log(_ProcessManager.residentList);
+            console.log(_ProcessManager.residentList.length);
 
-            for(var i; i < _ProcessManager.processArray.length; i++){
-                var pcbRun = _ProcessManager.processArray[i];
+            for(var i; i < _ProcessManager.residentList.length; i++){
+                var pcbRun = _ProcessManager.residentList[i];
                 _CPU.loadProgram(pcbRun);
 
-                console.log("Array Size: ", _ProcessManager.processArray.length);
-                console.log("Proccess array: ", _ProcessManager.processArray);
+                console.log("Array Size: ", _ProcessManager.residentList.length);
+                console.log("Proccess array: ", _ProcessManager.residentList);
             }*/
         };
         Shell.prototype.shellClearMem = function (args) {
+            //Set clear to the argument inputted which will be the partition index
             var clear = args.toString();
-            console.log(_Memory.memory);
+            //If it is equal to 0,1, or 2.. clear the respected partition index
             if (clear === "0") {
                 _Memory.clearMemoryPartition(0);
                 _StdOut.putText("Memory partition 0 cleared. ");
@@ -476,54 +493,72 @@ var TSOS;
             else if (clear === "2") {
                 _Memory.clearMemoryPartition(2);
                 _StdOut.putText("Memory partition 2 cleared. ");
+                //Else clear all partitions
             }
             else {
                 _Memory.clearMemory();
                 _StdOut.putText("All Memory partitions cleared. ");
             }
-            console.log(_Memory.memory);
+            //Update HTML with the new memory
             _Control.memoryUpdate();
+            //Debugging
+            //console.log(_Memory.memory);
         };
+        //Display all ps
         Shell.prototype.shellPS = function () {
-            for (var i = 0; i < _ProcessManager.processArray.length; i++) {
-                var pidPA = _ProcessManager.processArray[i].pid;
+            for (var i = 0; i < _ProcessManager.residentList.length; i++) {
+                var pidPA = _ProcessManager.residentList[i].pid;
                 _StdOut.putText("PID: " + pidPA);
                 _Console.advanceLine();
             }
         };
+        //Kill a particular proccess
         Shell.prototype.shellKill = function (args) {
             if (args.length > 0) {
                 var setting = args[0];
             }
         };
+        //Kill all proccesses
         Shell.prototype.shellKillAll = function () {
         };
+        //Turn on the round robin executing
         Shell.prototype.shellRRon = function (args) {
+            //If on or off is inputted
             if (args.length > 0) {
+                //Set input to setting
                 var setting = args[0];
+                //Run a switch case for on or off
                 switch (setting) {
                     case "on":
+                        //Turn RR on and alert the user
                         _TurnOnRR = true;
                         _StdOut.putText("Round Robin scheduling has been turned on.");
-                        console.log(_TurnOnRR);
+                        //console.log(_TurnOnRR);
                         break;
                     case "off":
+                        //Turn RR off and alert the user
                         _TurnOnRR = false;
                         _StdOut.putText("Round Robin scheduling has been turned off.");
-                        console.log(_TurnOnRR);
+                        //console.log(_TurnOnRR);
                         break;
                     default:
+                        //If input is not on or off alert the user
                         _StdOut.putText("Invalid arguement.  Usage: RR <on | off>.");
                 }
+                //If input is not on or off alert the user    
             }
             else {
                 _StdOut.putText("Usage: rr <on | off>");
             }
         };
+        //Set the quantum 
         Shell.prototype.shellQuantum = function (args) {
+            //Check for an input in the argument
             if (args.length > 0) {
+                //Set the quantum to the desired number
                 _DefaultQuantum = args[0];
                 _StdOut.putText("Quantum is set to  " + _DefaultQuantum);
+                //If input is not a number alert the user
             }
             else {
                 _StdOut.put("Please enter a valid number");

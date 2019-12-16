@@ -3,7 +3,13 @@
 var TSOS;
 (function (TSOS) {
     var cpuScheduler = /** @class */ (function () {
-        function cpuScheduler(quantum, algorithm, nextPCB) {
+        function cpuScheduler(
+        //Sets quantum equal to the assigned quantum
+        quantum, 
+        //sets a scheduled algorith to a string..In this case it will always be RR but if implementing more scheduling features we would use to adjust
+        algorithm, 
+        //Creates a null PCB
+        nextPCB) {
             if (quantum === void 0) { quantum = _DefaultQuantum; }
             if (algorithm === void 0) { algorithm = _SchedAlgo; }
             if (nextPCB === void 0) { nextPCB = null; }
@@ -12,23 +18,30 @@ var TSOS;
             this.nextPCB = nextPCB;
         }
         ;
+        //The Round robin scheduler
         cpuScheduler.prototype.roundRobin = function () {
+            //Sets pcb to the current pcb running
             var pcb = _CPU.currentPCB;
+            //Set the pcb state to waiting
+            pcb.state = "Waiting";
+            //Pushes the pcb to the back of the readyqueue 
             _ProcessManager.readyQueue.enqueue(pcb);
-            console.log("RR PCB: ", pcb);
+            //Sets the nextPCB to run to the pcb in the front of the ready queue using shift
             this.nextPCB = _ProcessManager.readyQueue.dequeue();
-            console.log("Dequeue ready queue: ", this.nextPCB);
-            console.log(_ProcessManager.readyQueue);
-            //var tempQueue: TSOS.Queue = new Queue();
-            //tempQueue.enqueue(pcb);
-            //console.log("Temp Queue: ", tempQueue);
+            //Debugging
+            //console.log("Dequeue ready queue: ", this.nextPCB);
+            //console.log(_ProcessManager.readyQueue);
+            //If the readyqueue is bigger than 0 then switch
             if (_ProcessManager.readyQueue.getSize() > 0) {
+                //Set the next pcb state to running 
                 this.nextPCB.state = "Running";
-                //_RoundRobinCounter = 0;
+                //Load the next pcb to the cpu to be run
                 _CPU.loadProgram(this.nextPCB);
+                //Debugging
                 //_ProcessManager.readyQueue.enqueue(pcb);
-                console.log("ReInitalize Ready Queue: ", _ProcessManager.readyQueue);
+                //console.log("ReInitalize Ready Queue: ", _ProcessManager.readyQueue);
             }
+            //Set isexecuting back to true to involk the cycle()
             _CPU.isExecuting = true;
         };
         return cpuScheduler;

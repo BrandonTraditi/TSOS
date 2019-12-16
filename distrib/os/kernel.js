@@ -32,11 +32,13 @@ var TSOS;
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
             _StdOut = _Console;
+            //Initalize Memory/Proccess
             _Memory = new TSOS.Memory();
             _MemoryAccessor = new TSOS.MemoryAccessor();
             _MemoryAccessor.init();
             _Memory.init();
             _MemoryManager = new TSOS.memoryManager();
+            //Initalize CPU/Control
             _ProcessManager = new TSOS.ProcessManager();
             _CpuScheduler = new TSOS.cpuScheduler();
             _Control = new TSOS.Control();
@@ -120,6 +122,7 @@ var TSOS;
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                //Add a round robin interrupt that involks the scheudler
                 case ROUNDROBIN_IRQ:
                     _CpuScheduler.roundRobin();
                     break;

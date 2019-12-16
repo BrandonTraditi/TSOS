@@ -36,14 +36,18 @@ module TSOS {
             _StdIn  = _Console;
             _StdOut = _Console;
 
+            //Initalize Memory/Proccess
             _Memory = new Memory();
             _MemoryAccessor = new MemoryAccessor();
             _MemoryAccessor.init();
             _Memory.init();
             _MemoryManager = new memoryManager();
+
+            //Initalize CPU/Control
             _ProcessManager = new ProcessManager();
             _CpuScheduler = new cpuScheduler();
             _Control = new Control();
+
             // Load the Keyboard Device Driver
             this.krnTrace("Loading the keyboard device driver.");
             _krnKeyboardDriver = new DeviceDriverKeyboard();     // Construct it.
@@ -135,6 +139,7 @@ module TSOS {
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                //Add a round robin interrupt that involks the scheudler
                 case ROUNDROBIN_IRQ:
                     _CpuScheduler.roundRobin();
                     break;
