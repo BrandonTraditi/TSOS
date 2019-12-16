@@ -302,10 +302,10 @@ var TSOS;
                     //Break program 
                 }
                 else if (this.instruction == "00") {
-                    //Increment program counter
-                    this.ProgramCounter++;
                     //Set the pcb state to terminated as it is done running
                     this.currentPCB.state = "Terminated";
+                    //Increment program counter
+                    this.ProgramCounter++;
                     //stop executing
                     this.isExecuting = false;
                     //Join all the outputs into a string
@@ -333,10 +333,8 @@ var TSOS;
             _RoundRobinCounter++;
             //Check if round robin is on
             if (_TurnOnRR == true) {
-                //If the counter is equal to the quantum set an interrupt
-                if (_RoundRobinCounter == _DefaultQuantum) {
-                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ROUNDROBIN_IRQ, 0));
-                }
+                //Check the cpuScheduler to see if it needs involk an interrupt
+                _CpuScheduler.check();
             }
             //Debugging
             //console.log("Quantum COunter: ", _RoundRobinCounter);

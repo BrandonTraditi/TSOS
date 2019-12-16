@@ -5,6 +5,7 @@
 ///<reference path="processManager.ts" />
 ///<reference path="memoryManager.ts" />
 ///<reference path="pcb.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 /* ------------
    Shell.ts
 
@@ -460,23 +461,13 @@ var TSOS;
         //RunAll command
         Shell.prototype.shellRunAll = function () {
             console.log("runall initiated");
-            _TurnOnRR = true;
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ROUNDROBIN_IRQ, 0));
-            /*while(_ProcessManager.residentList.length > 0){
-                var pcbRun: PCB = null;
-                pcbRun = _ProcessManager.residentList.pop();
+            var pcbRun = null;
+            while (_ProcessManager.readyQueue.getSize() > 0) {
+                var pcbRun = null;
+                _ProcessManager.runAll = true;
+                pcbRun = _ProcessManager.readyQueue.dequeue();
+                _ProcessManager.runProcess(pcbRun);
             }
-            _CPU.loadProgram(pcbRun);
-            console.log(_ProcessManager.residentList);
-            console.log(_ProcessManager.residentList.length);
-
-            for(var i; i < _ProcessManager.residentList.length; i++){
-                var pcbRun = _ProcessManager.residentList[i];
-                _CPU.loadProgram(pcbRun);
-
-                console.log("Array Size: ", _ProcessManager.residentList.length);
-                console.log("Proccess array: ", _ProcessManager.residentList);
-            }*/
         };
         Shell.prototype.shellClearMem = function (args) {
             //Set clear to the argument inputted which will be the partition index

@@ -1,5 +1,7 @@
 ///<reference path="../globals.ts" />
-///<reference path="queue.ts" />
+///<reference path="../os/queue.ts" />
+///<reference path="../host/cpu.ts" />
+///<reference path="../os/pcb.ts" />
 var TSOS;
 (function (TSOS) {
     var cpuScheduler = /** @class */ (function () {
@@ -18,6 +20,11 @@ var TSOS;
             this.nextPCB = nextPCB;
         }
         ;
+        cpuScheduler.prototype.check = function () {
+            if (_RoundRobinCounter == _DefaultQuantum) {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(ROUNDROBIN_IRQ, 0));
+            }
+        };
         //The Round robin scheduler
         cpuScheduler.prototype.roundRobin = function () {
             //Sets pcb to the current pcb running

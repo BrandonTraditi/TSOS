@@ -1,5 +1,6 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../utils.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 
 module TSOS{
     

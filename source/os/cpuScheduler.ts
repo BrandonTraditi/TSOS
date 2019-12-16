@@ -1,5 +1,7 @@
 ///<reference path="../globals.ts" />
-///<reference path="queue.ts" />
+///<reference path="../os/queue.ts" />
+///<reference path="../host/cpu.ts" />
+///<reference path="../os/pcb.ts" />
 
 
 module TSOS{
@@ -12,6 +14,12 @@ module TSOS{
         //Creates a null PCB
         public nextPCB: TSOS.PCB = null,
         ){};
+
+        public check(){
+            if(_RoundRobinCounter == _DefaultQuantum){
+                _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
+            }
+        }
 
         //The Round robin scheduler
         public roundRobin(){

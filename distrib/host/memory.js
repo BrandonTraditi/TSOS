@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 var TSOS;
 (function (TSOS) {
     var Memory = /** @class */ (function () {

@@ -5,6 +5,7 @@
 ///<reference path="processManager.ts" />
 ///<reference path="memoryManager.ts" />
 ///<reference path="pcb.ts" />
+///<reference path="../host/memoryAccessor.ts" />
 
 /* ------------
    Shell.ts
@@ -549,23 +550,14 @@ module TSOS {
         //RunAll command
         public shellRunAll(){
             console.log("runall initiated");
-            _TurnOnRR = true;
-            _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
-            /*while(_ProcessManager.residentList.length > 0){
-                var pcbRun: PCB = null;
-                pcbRun = _ProcessManager.residentList.pop();
+            var pcbRun: any = null;
+            while(_ProcessManager.readyQueue.getSize() > 0){
+                var pcbRun: any = null;
+                _ProcessManager.runAll = true;
+                pcbRun = _ProcessManager.readyQueue.dequeue();
+                _ProcessManager.runProcess(pcbRun);
             }
-            _CPU.loadProgram(pcbRun);
-            console.log(_ProcessManager.residentList);
-            console.log(_ProcessManager.residentList.length);
 
-            for(var i; i < _ProcessManager.residentList.length; i++){
-                var pcbRun = _ProcessManager.residentList[i];
-                _CPU.loadProgram(pcbRun);
-
-                console.log("Array Size: ", _ProcessManager.residentList.length);
-                console.log("Proccess array: ", _ProcessManager.residentList);
-            }*/
         }
 
         

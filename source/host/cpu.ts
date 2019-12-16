@@ -343,11 +343,11 @@
                         
                     //Break program 
                     }else if(this.instruction == "00"){
-
+                        
+                      //Set the pcb state to terminated as it is done running
+                      this.currentPCB.state = "Terminated";  
                       //Increment program counter
                       this.ProgramCounter++;
-                      //Set the pcb state to terminated as it is done running
-                      this.currentPCB.state = "Terminated";
                       //stop executing
                       this.isExecuting = false;
                       //Join all the outputs into a string
@@ -379,11 +379,12 @@
 
                 //Check if round robin is on
                 if(_TurnOnRR == true){
-                    //If the counter is equal to the quantum set an interrupt
-                    if(_RoundRobinCounter == _DefaultQuantum){
-                    _KernelInterruptQueue.enqueue(new Interrupt(ROUNDROBIN_IRQ, 0));
-                }
+                    //Check the cpuScheduler to see if it needs involk an interrupt
+                    _CpuScheduler.check();
             }
+
+
+
                 //Debugging
                 //console.log("Quantum COunter: ", _RoundRobinCounter);
                 //console.log("Default Quantum: ", _DefaultQuantum);
